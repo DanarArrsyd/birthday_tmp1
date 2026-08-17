@@ -204,7 +204,7 @@ body {
   line-height: 1.5;
 }
 
-/* ---------- Slide 2: kue + lilin ---------- */
+/* ---------- Kue + lilin (duduk di atas sampul) ---------- */
 
 .cake {
   /* Lebar kue diturunin dari satu variabel biar semua lapis tetap sebanding,
@@ -252,9 +252,9 @@ body {
   box-shadow: 0 0 7px rgba(217, 199, 163, .75);
   transform: translateX(-50%);
   transform-origin: 50% 100%;
-  animation: flicker 1.1s var(--ease-soft) infinite alternate;
-  transition: opacity var(--dur-base) var(--ease-soft),
-              transform var(--dur-base) var(--ease-soft);
+  animation: flicker 1.1s var(--ease-paper) infinite alternate;
+  transition: opacity var(--dur-base) var(--ease-paper),
+              transform var(--dur-base) var(--ease-paper);
 }
 
 /* Nyala lilin ambient — dibikin ga seragam biar ga kayak lampu LED */
@@ -281,13 +281,13 @@ body {
   top: -13px;
   width: 4px;
   height: 4px;
-  border-radius: var(--r-full);
+  border-radius: var(--r-pill);
   background: rgba(43, 24, 48, 0.3);
   opacity: 0;
   transform: translateX(-50%);
 }
 
-.candle.is-out::after { animation: smoke 900ms var(--ease-soft) forwards; }
+.candle.is-out::after { animation: smoke 900ms var(--ease-paper) forwards; }
 
 @keyframes smoke {
   from { opacity: 0.45; transform: translate(-50%, 0) scale(1); }
@@ -297,7 +297,7 @@ body {
 .cake-top {
   width: calc(var(--cake-w) * 0.74);
   height: 42px;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-paper);
   background: var(--paper);
   box-shadow: var(--sh-photo);
   position: relative;
@@ -319,7 +319,7 @@ body {
   width: calc(var(--cake-w) * 0.9);
   height: 54px;
   margin-top: 4px;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-paper);
   background: var(--tape);
   box-shadow: var(--sh-photo);
   position: relative;
@@ -330,7 +330,7 @@ body {
   width: var(--cake-w);
   height: 9px;
   margin-top: 2px;
-  border-radius: var(--r-full);
+  border-radius: var(--r-pill);
   background: var(--espresso);
   opacity: .34;
 }
