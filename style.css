@@ -5,46 +5,53 @@
    ========================================================= */
 
 :root {
-  /* Warna — DESIGN.md §2 */
-  --pink-primary: #FF4D8D;
-  --pink-soft:    #FFD6E5;
-  --pink-deep:    #A81A4C;
-  --lilac:        #A78BFA;
-  --accent-gold:  #FFC94D;
-  --ink:          #2B1830;
-  --cream:        #FFF8F4;
-  --white:        #FFFFFF;
+  /* Warna — spec §4 */
+  --paper:    #F4EADA;
+  --board:    #6B4A2F;
+  --espresso: #2E2016;
+  --cocoa:    #4A3524;
+  --sepia:    #7A5C3E;
+  --rust:     #8F4426;
+  --tape:     #D9C7A3;
+  --sage:     #8A9A78;
+  --polaroid: #FFFFFF;
 
-  /* Tipografi — DESIGN.md §3 */
-  --font-display: 'Baloo 2', system-ui, sans-serif;
-  --font-body:    'Poppins', system-ui, sans-serif;
-  --font-script:  'Dancing Script', cursive;
+  /* Tipografi — spec §5 */
+  --font-body:  'Lora', Georgia, serif;
+  --font-hand:  'Caveat', cursive;
+  --font-label: 'Special Elite', ui-monospace, monospace;
 
-  --fs-hero:  clamp(2.5rem, 8vw, 4rem);
-  --fs-h1:    clamp(2rem, 6vw, 2.75rem);
-  --fs-h2:    clamp(1.5rem, 4vw, 2rem);
-  --fs-lead:  clamp(1.125rem, 2.5vw, 1.25rem);
-  --fs-body:  1rem;
-  --fs-small: 0.875rem;
-  /* Font sambung ga pernah di bawah 24px — DESIGN.md §3 */
-  --fs-script: clamp(1.5rem, 5vw, 2rem);
+  --fs-display: clamp(3.5rem, 14vw, 4.5rem);  /* angka umur, Special Elite */
+  --fs-h1:      clamp(1.75rem, 5.5vw, 2.25rem);
+  --fs-h2:      clamp(1.375rem, 4vw, 1.625rem);
+  --fs-body:    1rem;
+  --fs-hand:    clamp(1.125rem, 4.5vw, 1.375rem);  /* min 18px — spec §5 */
+  --fs-label:   0.875rem;                          /* 14px, plafon bawah Special Elite */
 
-  /* Spacing & radius — DESIGN.md §4 */
+  /* Spacing — basis 4px */
   --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
   --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px; --sp-9: 96px;
 
-  --r-sm: 8px; --r-md: 16px; --r-lg: 24px; --r-full: 999px;
+  /* Radius — kertas nyaris tanpa sudut membulat */
+  --r-paper: 2px;
+  --r-cover: 3px;
+  --r-photo: 0;
+  --r-pill:  999px;
 
-  --shadow-sm: 0 2px 8px rgba(168, 26, 76, 0.08);
-  --shadow-md: 0 8px 20px rgba(255, 77, 141, 0.15);
-  --shadow-lg: 0 12px 30px rgba(255, 77, 141, 0.18);
+  /* Bayangan bernada hangat */
+  --sh-sheet: 0 6px 18px rgba(46, 32, 22, .18);
+  --sh-photo: 0 3px 10px rgba(46, 32, 22, .26);
+  --sh-lift:  0 12px 26px rgba(46, 32, 22, .24);
 
-  /* Motion — DESIGN.md §5 */
+  /* Motion — spec §8. Easing memantul lama sengaja dibuang. */
   --dur-micro: 150ms;
-  --dur-base: 300ms;
-  --dur-signature: 800ms;
-  --ease-bounce: cubic-bezier(.34, 1.56, .64, 1);
-  --ease-soft: cubic-bezier(.25, .8, .35, 1);
+  --dur-base:  300ms;
+  --dur-cover: 800ms;
+  --ease-paper: cubic-bezier(.22, .8, .3, 1);
+  --ease-lift:  cubic-bezier(.34, 1.3, .64, 1);
+
+  /* Tekstur kertas — ubin feTurbulence, dirasterisasi sekali, bukan filter hidup */
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23g)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -56,11 +63,8 @@ body {
   font-weight: 400;
   font-size: var(--fs-body);
   line-height: 1.6;
-  color: var(--ink);
-  /* Rentang cream -> pink-soft. Dua-duanya aman buat --ink (12.3:1)
-     maupun --pink-deep (5.5:1), jadi teks tetap lolos di titik manapun. */
-  background-color: var(--cream);
-  background-image: linear-gradient(165deg, var(--cream) 0%, var(--pink-soft) 100%);
+  color: var(--cocoa);
+  background-color: var(--board);
   overflow-x: hidden;
 }
 
