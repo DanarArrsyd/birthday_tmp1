@@ -473,7 +473,6 @@
       if (started) return;   // tanpa ini, panggilan kedua nambah 16 lilin lagi
       started = true;
 
-      build();
       setStatus('asking');
 
       // file:// atau browser lawas -> API-nya ga eksis. Langsung manual.
@@ -514,6 +513,8 @@
     }
 
     manualBtn.addEventListener('click', manualBlow);
+
+    build();
 
     return { start: start, stopMic: stopMic };
   })();
