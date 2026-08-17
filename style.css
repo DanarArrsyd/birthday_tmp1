@@ -76,124 +76,102 @@ body {
   clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
-/* Focus ring — DESIGN.md §6. --ink lolos kontras di cream, pink-soft, pink-primary. */
+/* Focus ring — DESIGN.md §6. --paper kontras di --board maupun --paper. */
 :focus-visible {
-  outline: 3px solid var(--ink);
+  outline: 3px solid var(--paper);
   outline-offset: 2px;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-paper);
 }
 
-/* ---------- Backdrop dekoratif ---------- */
+/* ---------- Sampul (cover) ---------- */
 
-.backdrop { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
-
-.blob {
-  position: absolute; display: block;
-  border-radius: var(--r-full);
-  filter: blur(60px);
-  opacity: 0.55;
+.cover-stage {
+  perspective: 1400px;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: var(--sp-5);
 }
 
-.blob-a { width: 46vmax; height: 46vmax; top: -18vmax; left: -14vmax; background: var(--pink-soft); opacity: 0.85; }
-/* 0.2 itu plafon terhitung: di atas itu, blend pink-primary x pink-soft
-   bikin teks kecil --pink-deep turun di bawah 4.5:1. Jangan dinaikin. */
-.blob-b { width: 40vmax; height: 40vmax; bottom: -16vmax; right: -12vmax; background: var(--pink-primary); opacity: 0.2; }
-.blob-c { width: 22vmax; height: 22vmax; top: 45%; right: 8%; background: var(--lilac); opacity: 0.22; }
+.cover {
+  width: 100%;
+  max-width: 22rem;
+  padding: var(--sp-7) var(--sp-5) var(--sp-6);
+  border-radius: var(--r-cover);
+  background-color: var(--board);
+  background-image: var(--paper-grain);
+  box-shadow: var(--sh-sheet);
+  text-align: center;
+  transform-origin: left center;
+  transition: transform var(--dur-cover) var(--ease-paper),
+              opacity var(--dur-cover) var(--ease-paper);
+}
 
-.blob-a { animation: drift 22s var(--ease-soft) infinite alternate; }
-.blob-c { animation: drift 18s var(--ease-soft) infinite alternate-reverse; }
+.cover.is-open { transform: rotateY(-105deg); opacity: 0; }
 
-@keyframes drift {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(3vmax, 4vmax, 0); }
+/* Teks di atas --board wajib --paper: 6,7:1 */
+.cover-kicker {
+  margin: 0 0 var(--sp-2);
+  font-family: var(--font-label);
+  font-size: var(--fs-label);
+  letter-spacing: .06em;
+  color: var(--paper);
+}
+
+.cover-name {
+  margin: 0 0 var(--sp-6);
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: var(--fs-h1);
+  line-height: 1.2;
+  color: var(--paper);
+}
+
+.cover-status {
+  margin: var(--sp-5) 0 var(--sp-2);
+  font-weight: 600;
+  color: var(--paper);
+}
+
+.cover-privacy {
+  margin: 0 0 var(--sp-5);
+  font-size: var(--fs-label);
+  color: var(--paper);
+  opacity: .82;
 }
 
 /* ---------- Tombol suara ---------- */
 
 .sound-toggle {
-  position: fixed; top: var(--sp-4); right: var(--sp-4); z-index: 3;
+  position: fixed; top: var(--sp-4); right: var(--sp-4); z-index: 4;
   width: 44px; height: 44px;
   display: grid; place-items: center;
-  border: 0; border-radius: var(--r-full);
-  background: var(--white);
-  box-shadow: var(--shadow-sm);
+  border: 0; border-radius: var(--r-pill);
+  background: var(--paper);
+  box-shadow: var(--sh-photo);
   cursor: pointer;
-  transition: transform var(--dur-micro) var(--ease-bounce);
+  transition: transform var(--dur-micro) var(--ease-lift);
 }
 
-.sound-toggle:hover { transform: scale(1.08); }
 .sound-toggle:active { transform: scale(0.94); }
 
 .sound-icon {
   width: 18px; height: 18px;
-  border-radius: 3px 0 0 3px;
-  background: var(--pink-deep);
+  background: var(--cocoa);
   clip-path: polygon(0 30%, 35% 30%, 70% 0, 70% 100%, 35% 70%, 0 70%);
   position: relative;
 }
 
 .sound-icon::after {
   content: ""; position: absolute; inset: 0;
-  border-right: 3px solid var(--pink-deep);
-  border-radius: 0 var(--r-full) var(--r-full) 0;
+  border-right: 3px solid var(--cocoa);
+  border-radius: 0 var(--r-pill) var(--r-pill) 0;
   opacity: 0;
-  transition: opacity var(--dur-micro) var(--ease-soft);
+  transition: opacity var(--dur-micro) var(--ease-paper);
 }
 
 .sound-toggle[aria-pressed="false"] .sound-icon::after { opacity: 1; }
-.sound-toggle[aria-pressed="true"] .sound-icon { opacity: 0.35; }
-
-/* ---------- Stage & slide ---------- */
-
-.stage {
-  position: relative; z-index: 1;
-  min-height: 100svh;
-  display: grid; place-items: center;
-  padding: var(--sp-6) var(--sp-5);
-}
-
-.slide { display: none; text-align: center; max-width: 34rem; width: 100%; }
-
-body[data-slide="gate"] .slide-gate,
-body[data-slide="cake"] .slide-cake,
-body[data-slide="card"] .slide-card {
-  display: block;
-  animation: slide-in var(--dur-signature) var(--ease-bounce) both;
-}
-
-@keyframes slide-in {
-  from { opacity: 0; transform: translateY(24px) scale(0.94); }
-  to   { opacity: 1; transform: none; }
-}
-
-/* ---------- Teks umum ---------- */
-
-.kicker {
-  margin: 0 0 var(--sp-2);
-  font-size: var(--fs-small);
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--pink-deep);
-}
-
-.lede {
-  margin: 0 0 var(--sp-7);
-  font-size: var(--fs-lead);
-  color: var(--ink);
-  opacity: 0.75;
-}
-
-/* Font sambung — aturan ketat di DESIGN.md §3.
-   Tanpa uppercase, tanpa letter-spacing, ga pernah di bawah 24px. */
-.script-line {
-  font-family: var(--font-script);
-  font-weight: 600;
-  font-size: var(--fs-script);
-  line-height: 1.4;
-  color: var(--pink-deep);
-  margin: 0 0 var(--sp-5);
-}
+.sound-toggle[aria-pressed="true"]  .sound-icon { opacity: .38; }
 
 /* ---------- Tombol ---------- */
 
@@ -201,55 +179,34 @@ body[data-slide="card"] .slide-card {
   min-height: 44px;
   padding: var(--sp-3) var(--sp-6);
   border: 0;
-  border-radius: var(--r-md);
+  border-radius: var(--r-paper);
   font-family: var(--font-body);
   font-weight: 600;
   font-size: var(--fs-body);
   cursor: pointer;
-  transition: transform var(--dur-micro) var(--ease-bounce),
-              opacity var(--dur-micro) var(--ease-soft);
+  transition: transform var(--dur-micro) var(--ease-lift);
 }
 
-.btn:hover { transform: translateY(-2px); }
-.btn:active { transform: translateY(0) scale(0.97); }
-.btn[disabled] { opacity: 0.5; cursor: default; transform: none; }
+.btn:active { transform: scale(0.97); }
+.btn[disabled] { opacity: .5; cursor: default; transform: none; }
 
 .btn-primary { background: var(--pink-deep); color: var(--white); }
 
-.btn-ghost {
-  background: var(--white);
-  color: var(--pink-deep);
-  box-shadow: var(--shadow-sm);
-}
+/* Teks --cocoa di atas --paper: 9,7:1 */
+.btn-ghost { background: var(--paper); color: var(--cocoa); box-shadow: var(--sh-photo); }
 
-.btn-start {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  padding: var(--sp-4) var(--sp-8);
-}
-
-.btn-manual { margin-top: var(--sp-5); }
-
-/* ---------- Slide 1: gate ---------- */
-
-.gate-name {
-  margin: 0 0 var(--sp-3);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--fs-hero);
-  line-height: 1.15;
-  color: var(--pink-deep);
+.mic-debug {
+  margin: var(--sp-5) auto 0;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-paper);
+  background: var(--paper);
+  color: var(--cocoa);
+  font-family: var(--font-label);
+  font-size: var(--fs-label);
+  line-height: 1.5;
 }
 
 /* ---------- Slide 2: kue + lilin ---------- */
-
-.cake-title {
-  margin: 0 0 var(--sp-2);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--fs-h2);
-  color: var(--ink);
-}
 
 .cake {
   /* Lebar kue diturunin dari satu variabel biar semua lapis tetap sebanding,
@@ -280,7 +237,7 @@ body[data-slide="card"] .slide-card {
   height: 30px;
   border-radius: 3px;
   background: repeating-linear-gradient(45deg,
-    var(--pink-primary) 0 4px, var(--white) 4px 8px);
+    var(--paper) 0 4px, var(--rust) 4px 8px);
 }
 
 .flame {
@@ -343,8 +300,8 @@ body[data-slide="card"] .slide-card {
   width: calc(var(--cake-w) * 0.74);
   height: 42px;
   border-radius: var(--r-sm);
-  background: var(--pink-soft);
-  box-shadow: var(--shadow-sm);
+  background: var(--tape);
+  box-shadow: var(--sh-photo);
   position: relative;
   z-index: 1;
 }
@@ -355,7 +312,7 @@ body[data-slide="card"] .slide-card {
   position: absolute;
   left: 0; right: 0; bottom: -7px;
   height: 14px;
-  background-image: radial-gradient(circle at 10px 0, var(--pink-soft) 9px, transparent 9.5px);
+  background-image: radial-gradient(circle at 10px 0, var(--tape) 9px, transparent 9.5px);
   background-size: 21px 14px;
   background-repeat: repeat-x;
 }
@@ -365,8 +322,8 @@ body[data-slide="card"] .slide-card {
   height: 54px;
   margin-top: 4px;
   border-radius: var(--r-sm);
-  background: var(--white);
-  box-shadow: var(--shadow-md);
+  background: var(--paper);
+  box-shadow: var(--sh-photo);
   position: relative;
   z-index: 0;
 }
@@ -376,64 +333,14 @@ body[data-slide="card"] .slide-card {
   height: 9px;
   margin-top: 2px;
   border-radius: var(--r-full);
-  background: var(--pink-deep);
-  opacity: 0.22;
-}
-
-.cake-status {
-  margin: 0 0 var(--sp-2);
-  font-size: var(--fs-lead);
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.privacy-note {
-  margin: 0;
-  font-size: var(--fs-small);
-  color: var(--ink);
-  /* 0.65 nurunin kontras efektif ke ~4.5:1 pas di ambang. 0.75 aman (6.2:1). */
-  opacity: 0.75;
-}
-
-/* Panel angka buat nyetel ambang deteksi — cuma nyala di ?debug=1 */
-.mic-debug {
-  margin: var(--sp-5) auto 0;
-  max-width: 22rem;
-  padding: var(--sp-2) var(--sp-3);
-  border-radius: var(--r-sm);
-  background: var(--white);
-  color: var(--ink);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.75rem;
-  line-height: 1.5;
+  background: var(--espresso);
+  opacity: .34;
 }
 
 /* ---------- Slide 3: kartu ---------- */
 
-.card {
-  padding: var(--sp-7) var(--sp-6) var(--sp-6);
-  border-radius: var(--r-lg);
-  background: var(--white);
-  box-shadow: var(--shadow-lg);
-}
-
 /* Fokus programatik pas kartu kebuka — jangan gambar ring di sini */
 .card:focus { outline: none; }
-
-.card-title {
-  margin: 0 0 var(--sp-5);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--fs-h1);
-  line-height: 1.15;
-  color: var(--ink);
-}
-
-.card-line {
-  margin: 0 auto var(--sp-4);
-  max-width: 42ch;
-  color: var(--ink);
-}
 
 /* Penanda copy sementara — hapus blok ini kalau semua GANTI udah diisi */
 .card-line em {
@@ -443,8 +350,6 @@ body[data-slide="card"] .slide-card {
   background: var(--accent-gold);
   color: var(--ink);
 }
-
-.card-sign { margin: var(--sp-6) 0 var(--sp-6); }
 
 /* ---------- Confetti canvas (dibuat & dihapus lewat JS) ---------- */
 
@@ -459,7 +364,6 @@ body[data-slide="card"] .slide-card {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .blob { animation: none; }
   /* Lilin tetap kelihatan nyala, cuma berhenti goyang */
   .flame { animation: none; opacity: 1; transform: translateX(-50%); }
   .candle.is-out::after { animation: none; opacity: 0; }

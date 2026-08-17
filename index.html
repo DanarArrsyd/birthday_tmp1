@@ -11,35 +11,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Caveat:wght@600&family=Special+Elite&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body data-slide="gate">
-
-<div class="backdrop" aria-hidden="true">
-  <span class="blob blob-a"></span>
-  <span class="blob blob-b"></span>
-  <span class="blob blob-c"></span>
-</div>
+<body>
 
 <button class="sound-toggle" id="soundToggle" aria-pressed="false">
   <span class="sound-icon" aria-hidden="true"></span>
   <span class="sr-only">Matikan suara</span>
 </button>
 
-<main class="stage">
-
-  <!-- ============ SLIDE 1 — pembuka ============ -->
-  <section class="slide slide-gate" id="slideGate">
-    <p class="kicker">Dari kakak lo</p>
-    <h1 class="gate-name">Dinar</h1>
-    <p class="lede">Ada kue nunggu di dalem.</p>
-    <button class="btn btn-primary btn-start" id="startBtn" type="button">Buka</button>
-  </section>
-
-  <!-- ============ SLIDE 2 — kue + lilin (signature) ============ -->
-  <section class="slide slide-cake" id="slideCake">
-    <h2 class="cake-title">16 lilin buat lo</h2>
-
-    <!-- Kuota font sambung 1 dari 2 -->
-    <p class="script-line">Tutup mata, bikin permintaan</p>
+<div class="cover-stage" id="coverStage">
+  <section class="cover" id="cover">
+    <p class="cover-kicker">Dari kakak lo</p>
+    <h1 class="cover-name">Dinar</h1>
 
     <div class="cake" aria-hidden="true">
       <div class="candles" id="candles"></div>
@@ -48,14 +30,14 @@
       <div class="cake-plate"></div>
     </div>
 
-    <p class="cake-status" id="cakeStatus" aria-live="polite">Siap-siap ya</p>
-    <p class="privacy-note" id="privacyNote">Suaranya diproses di HP lo doang, nggak dikirim ke mana-mana.</p>
+    <p class="cover-status" id="cakeStatus" aria-live="polite">Siap-siap ya</p>
+    <p class="cover-privacy" id="privacyNote">Suaranya diproses di HP lo doang, nggak dikirim ke mana-mana.</p>
 
-    <button class="btn btn-ghost btn-manual" id="manualBtn" type="button" hidden>Tiup manual</button>
-
-    <!-- Cuma muncul kalau URL-nya ?debug=1 — buat nyetel ambang deteksi di HP asli -->
+    <button class="btn btn-ghost" id="startBtn" type="button">Mulai</button>
+    <button class="btn btn-ghost" id="manualBtn" type="button" hidden>Tiup manual</button>
     <p class="mic-debug" id="micDebug" hidden></p>
   </section>
+</div>
 
   <!-- ============================================================
        SLIDE 3 — COPY SEMENTARA
@@ -91,8 +73,6 @@
       <button class="btn btn-primary" id="replay" type="button">Puter lagunya lagi</button>
     </div>
   </section>
-
-</main>
 
 <script src="script.js"></script>
 </body>
