@@ -1,0 +1,460 @@
+/* =========================================================
+   Buat Dinar — stylesheet
+   Semua nilai ambil dari token. Jangan hardcode hex/px baru.
+   Referensi: DESIGN.md
+   ========================================================= */
+
+:root {
+  /* Warna — DESIGN.md §2 */
+  --pink-primary: #FF4D8D;
+  --pink-soft:    #FFD6E5;
+  --pink-deep:    #A81A4C;
+  --lilac:        #A78BFA;
+  --accent-gold:  #FFC94D;
+  --ink:          #2B1830;
+  --cream:        #FFF8F4;
+  --white:        #FFFFFF;
+
+  /* Tipografi — DESIGN.md §3 */
+  --font-display: 'Baloo 2', system-ui, sans-serif;
+  --font-body:    'Poppins', system-ui, sans-serif;
+  --font-script:  'Dancing Script', cursive;
+
+  --fs-hero:  clamp(2.5rem, 8vw, 4rem);
+  --fs-h1:    clamp(2rem, 6vw, 2.75rem);
+  --fs-h2:    clamp(1.5rem, 4vw, 2rem);
+  --fs-lead:  clamp(1.125rem, 2.5vw, 1.25rem);
+  --fs-body:  1rem;
+  --fs-small: 0.875rem;
+  /* Font sambung ga pernah di bawah 24px — DESIGN.md §3 */
+  --fs-script: clamp(1.5rem, 5vw, 2rem);
+
+  /* Spacing & radius — DESIGN.md §4 */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px; --sp-9: 96px;
+
+  --r-sm: 8px; --r-md: 16px; --r-lg: 24px; --r-full: 999px;
+
+  --shadow-sm: 0 2px 8px rgba(168, 26, 76, 0.08);
+  --shadow-md: 0 8px 20px rgba(255, 77, 141, 0.15);
+  --shadow-lg: 0 12px 30px rgba(255, 77, 141, 0.18);
+
+  /* Motion — DESIGN.md §5 */
+  --dur-micro: 150ms;
+  --dur-base: 300ms;
+  --dur-signature: 800ms;
+  --ease-bounce: cubic-bezier(.34, 1.56, .64, 1);
+  --ease-soft: cubic-bezier(.25, .8, .35, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--ink);
+  /* Rentang cream -> pink-soft. Dua-duanya aman buat --ink (12.3:1)
+     maupun --pink-deep (5.5:1), jadi teks tetap lolos di titik manapun. */
+  background-color: var(--cream);
+  background-image: linear-gradient(165deg, var(--cream) 0%, var(--pink-soft) 100%);
+  overflow-x: hidden;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Focus ring — DESIGN.md §6. --ink lolos kontras di cream, pink-soft, pink-primary. */
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* ---------- Backdrop dekoratif ---------- */
+
+.backdrop { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+
+.blob {
+  position: absolute; display: block;
+  border-radius: var(--r-full);
+  filter: blur(60px);
+  opacity: 0.55;
+}
+
+.blob-a { width: 46vmax; height: 46vmax; top: -18vmax; left: -14vmax; background: var(--pink-soft); opacity: 0.85; }
+/* 0.2 itu plafon terhitung: di atas itu, blend pink-primary x pink-soft
+   bikin teks kecil --pink-deep turun di bawah 4.5:1. Jangan dinaikin. */
+.blob-b { width: 40vmax; height: 40vmax; bottom: -16vmax; right: -12vmax; background: var(--pink-primary); opacity: 0.2; }
+.blob-c { width: 22vmax; height: 22vmax; top: 45%; right: 8%; background: var(--lilac); opacity: 0.22; }
+
+.blob-a { animation: drift 22s var(--ease-soft) infinite alternate; }
+.blob-c { animation: drift 18s var(--ease-soft) infinite alternate-reverse; }
+
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(3vmax, 4vmax, 0); }
+}
+
+/* ---------- Tombol suara ---------- */
+
+.sound-toggle {
+  position: fixed; top: var(--sp-4); right: var(--sp-4); z-index: 3;
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border: 0; border-radius: var(--r-full);
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform var(--dur-micro) var(--ease-bounce);
+}
+
+.sound-toggle:hover { transform: scale(1.08); }
+.sound-toggle:active { transform: scale(0.94); }
+
+.sound-icon {
+  width: 18px; height: 18px;
+  border-radius: 3px 0 0 3px;
+  background: var(--pink-deep);
+  clip-path: polygon(0 30%, 35% 30%, 70% 0, 70% 100%, 35% 70%, 0 70%);
+  position: relative;
+}
+
+.sound-icon::after {
+  content: ""; position: absolute; inset: 0;
+  border-right: 3px solid var(--pink-deep);
+  border-radius: 0 var(--r-full) var(--r-full) 0;
+  opacity: 0;
+  transition: opacity var(--dur-micro) var(--ease-soft);
+}
+
+.sound-toggle[aria-pressed="false"] .sound-icon::after { opacity: 1; }
+.sound-toggle[aria-pressed="true"] .sound-icon { opacity: 0.35; }
+
+/* ---------- Stage & slide ---------- */
+
+.stage {
+  position: relative; z-index: 1;
+  min-height: 100svh;
+  display: grid; place-items: center;
+  padding: var(--sp-6) var(--sp-5);
+}
+
+.slide { display: none; text-align: center; max-width: 34rem; width: 100%; }
+
+body[data-slide="gate"] .slide-gate,
+body[data-slide="cake"] .slide-cake,
+body[data-slide="card"] .slide-card {
+  display: block;
+  animation: slide-in var(--dur-signature) var(--ease-bounce) both;
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.94); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Teks umum ---------- */
+
+.kicker {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pink-deep);
+}
+
+.lede {
+  margin: 0 0 var(--sp-7);
+  font-size: var(--fs-lead);
+  color: var(--ink);
+  opacity: 0.75;
+}
+
+/* Font sambung — aturan ketat di DESIGN.md §3.
+   Tanpa uppercase, tanpa letter-spacing, ga pernah di bawah 24px. */
+.script-line {
+  font-family: var(--font-script);
+  font-weight: 600;
+  font-size: var(--fs-script);
+  line-height: 1.4;
+  color: var(--pink-deep);
+  margin: 0 0 var(--sp-5);
+}
+
+/* ---------- Tombol ---------- */
+
+.btn {
+  min-height: 44px;
+  padding: var(--sp-3) var(--sp-6);
+  border: 0;
+  border-radius: var(--r-md);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-body);
+  cursor: pointer;
+  transition: transform var(--dur-micro) var(--ease-bounce),
+              opacity var(--dur-micro) var(--ease-soft);
+}
+
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0) scale(0.97); }
+.btn[disabled] { opacity: 0.5; cursor: default; transform: none; }
+
+.btn-primary { background: var(--pink-deep); color: var(--white); }
+
+.btn-ghost {
+  background: var(--white);
+  color: var(--pink-deep);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-start {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  padding: var(--sp-4) var(--sp-8);
+}
+
+.btn-manual { margin-top: var(--sp-5); }
+
+/* ---------- Slide 1: gate ---------- */
+
+.gate-name {
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-hero);
+  line-height: 1.15;
+  color: var(--pink-deep);
+}
+
+/* ---------- Slide 2: kue + lilin ---------- */
+
+.cake-title {
+  margin: 0 0 var(--sp-2);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-h2);
+  color: var(--ink);
+}
+
+.cake {
+  /* Lebar kue diturunin dari satu variabel biar semua lapis tetap sebanding,
+     dan ga pernah lewat lebar layar sempit (320px). */
+  --cake-w: min(290px, 82vw);
+  display: grid;
+  justify-items: center;
+  margin: var(--sp-6) auto var(--sp-5);
+}
+
+/* space-between + nowrap: 16 lilin selalu satu baris, jaraknya nyesuaikan
+   sendiri. Kalau pakai gap tetap, di layar sempit lilinnya turun baris
+   dan keliatan ngambang di atas kue. */
+.candles {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: calc(var(--cake-w) * 0.68);
+  margin-bottom: -2px;
+  position: relative;
+  z-index: 2;
+}
+
+.candle {
+  position: relative;
+  flex: 0 0 auto;
+  width: 6px;
+  height: 30px;
+  border-radius: 3px;
+  background: repeating-linear-gradient(45deg,
+    var(--pink-primary) 0 4px, var(--white) 4px 8px);
+}
+
+.flame {
+  position: absolute;
+  left: 50%;
+  top: -14px;
+  /* Jarak antar lilin cuma ~11px. Api lebih lebar dari 9px bikin
+     nyalanya nyatu jadi satu pita, ga kebaca lagi sebagai 16 lilin. */
+  width: 9px;
+  height: 13px;
+  border-radius: 50% 50% 45% 45% / 62% 62% 38% 38%;
+  background: radial-gradient(60% 60% at 50% 72%,
+    var(--white) 0%, var(--accent-gold) 46%, rgba(255, 122, 60, 0.9) 100%);
+  box-shadow: 0 0 7px rgba(255, 201, 77, 0.8);
+  transform: translateX(-50%);
+  transform-origin: 50% 100%;
+  animation: flicker 1.1s var(--ease-soft) infinite alternate;
+  transition: opacity var(--dur-base) var(--ease-soft),
+              transform var(--dur-base) var(--ease-soft);
+}
+
+/* Nyala lilin ambient — dibikin ga seragam biar ga kayak lampu LED */
+.candle:nth-child(3n)   .flame { animation-duration: 1.4s; }
+.candle:nth-child(4n+1) .flame { animation-duration: 0.9s; animation-delay: -0.4s; }
+.candle:nth-child(5n)   .flame { animation-delay: -0.7s; }
+
+@keyframes flicker {
+  from { transform: translateX(-50%) scale(1, 1); opacity: 1; }
+  to   { transform: translateX(-50%) scale(1.14, 0.9); opacity: 0.88; }
+}
+
+.candle.is-out .flame {
+  opacity: 0;
+  transform: translateX(-50%) scale(0.2);
+  animation: none;
+}
+
+/* Asap tipis pas lilin mati */
+.candle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -13px;
+  width: 4px;
+  height: 4px;
+  border-radius: var(--r-full);
+  background: rgba(43, 24, 48, 0.3);
+  opacity: 0;
+  transform: translateX(-50%);
+}
+
+.candle.is-out::after { animation: smoke 900ms var(--ease-soft) forwards; }
+
+@keyframes smoke {
+  from { opacity: 0.45; transform: translate(-50%, 0) scale(1); }
+  to   { opacity: 0; transform: translate(-50%, -30px) scale(2.6); }
+}
+
+.cake-top {
+  width: calc(var(--cake-w) * 0.74);
+  height: 42px;
+  border-radius: var(--r-sm);
+  background: var(--pink-soft);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  z-index: 1;
+}
+
+/* Lelehan frosting */
+.cake-top::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -7px;
+  height: 14px;
+  background-image: radial-gradient(circle at 10px 0, var(--pink-soft) 9px, transparent 9.5px);
+  background-size: 21px 14px;
+  background-repeat: repeat-x;
+}
+
+.cake-bottom {
+  width: calc(var(--cake-w) * 0.9);
+  height: 54px;
+  margin-top: 4px;
+  border-radius: var(--r-sm);
+  background: var(--white);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  z-index: 0;
+}
+
+.cake-plate {
+  width: var(--cake-w);
+  height: 9px;
+  margin-top: 2px;
+  border-radius: var(--r-full);
+  background: var(--pink-deep);
+  opacity: 0.22;
+}
+
+.cake-status {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--fs-lead);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.privacy-note {
+  margin: 0;
+  font-size: var(--fs-small);
+  color: var(--ink);
+  /* 0.65 nurunin kontras efektif ke ~4.5:1 pas di ambang. 0.75 aman (6.2:1). */
+  opacity: 0.75;
+}
+
+/* Panel angka buat nyetel ambang deteksi — cuma nyala di ?debug=1 */
+.mic-debug {
+  margin: var(--sp-5) auto 0;
+  max-width: 22rem;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-sm);
+  background: var(--white);
+  color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+/* ---------- Slide 3: kartu ---------- */
+
+.card {
+  padding: var(--sp-7) var(--sp-6) var(--sp-6);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Fokus programatik pas kartu kebuka — jangan gambar ring di sini */
+.card:focus { outline: none; }
+
+.card-title {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-h1);
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.card-line {
+  margin: 0 auto var(--sp-4);
+  max-width: 42ch;
+  color: var(--ink);
+}
+
+/* Penanda copy sementara — hapus blok ini kalau semua GANTI udah diisi */
+.card-line em {
+  font-style: normal;
+  padding: 0 var(--sp-1);
+  border-radius: var(--r-sm);
+  background: var(--accent-gold);
+  color: var(--ink);
+}
+
+.card-sign { margin: var(--sp-6) 0 var(--sp-6); }
+
+/* ---------- Confetti canvas (dibuat & dihapus lewat JS) ---------- */
+
+.confetti { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
+
+/* ---------- Reduced motion — DESIGN.md §5 ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .blob { animation: none; }
+  /* Lilin tetap kelihatan nyala, cuma berhenti goyang */
+  .flame { animation: none; opacity: 1; transform: translateX(-50%); }
+  .candle.is-out::after { animation: none; opacity: 0; }
+}
