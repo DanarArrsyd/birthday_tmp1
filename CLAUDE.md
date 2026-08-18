@@ -48,6 +48,14 @@ Aturan pemisahan file:
 - Semua efek (sobekan kertas, partikel, animasi) dibikin manual pakai canvas/CSS. Ada budget performa di §5 DESIGN.md — patuhi.
 - Audio disintesis pakai Web Audio API, bukan file MP3/WAV, bukan library. Aturan lengkap di §8 DESIGN.md. Ga ada autoplay — audio cuma boleh mulai dari gesture user.
 
+## Aturan rilis
+
+**Setiap kali `style.css` atau `script.js` berubah, naikkan `?v=` pada dua tag di `index.html`.**
+
+GitHub Pages mengirim `cache-control: max-age=600` untuk semua berkas. Tanpa penanda versi, HP yang pernah membuka halaman ini bisa mendapat HTML baru berpasangan dengan CSS lama dari cache. Hasilnya lembar tampil rusak, dan satu-satunya penyembuhnya adalah hard refresh — yang tidak akan pernah dilakukan penerima kado.
+
+Aturan turunannya: **efek hiasan tidak boleh menentukan apakah isi terlihat.** Versi awal tepi sobek memakai mask berlapis pada `.paper`; begitu satu lapis gugur di Safari iOS, seluruh tulisan ikut hilang. Efek semacam itu harus ditimpa di atas (`::after`), bukan memotong wadah isinya.
+
 ## Yang TIDAK boleh dilakukan tanpa izin eksplisit
 
 - Ganti atau nambah warna di luar palet di §2 DESIGN.md

@@ -9,7 +9,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Caveat:wght@600&family=Special+Elite&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<!-- ?v= wajib dinaikkan tiap kali style.css atau script.js diubah.
+     Tanpa itu, HP yang pernah membuka halaman ini bisa memakai HTML baru
+     bersama CSS lama dari cache, dan hasilnya lembar tampil rusak sampai
+     pengguna melakukan hard refresh — yang tidak akan pernah dia lakukan. -->
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 
@@ -127,6 +131,6 @@
   <button class="arrow" id="nextBtn" type="button" aria-label="Lembar berikutnya">&#8250;</button>
 </nav>
 
-<script src="script.js"></script>
+<script src="script.js?v=3"></script>
 </body>
 </html>
