@@ -312,11 +312,11 @@
     var blowMs = 0, armed = false, sinceKill = 0;
 
     var STATUS = {
-      asking: 'Izinin mikrofonnya dulu ya',
-      calibrating: 'Dengerin sekitar bentar...',
+      asking: 'Izinkan mikrofonnya dulu ya',
+      calibrating: 'Mendengarkan sekitar sebentar...',
       listening: 'Sekarang tiup lilinnya',
-      denied: 'Nggak apa-apa — pakai tombol aja',
-      nomic: 'Browser ini nggak bisa akses mikrofon',
+      denied: 'Tidak apa-apa — pakai tombol saja',
+      nomic: 'Browser ini tidak bisa mengakses mikrofon',
       done: 'Lilinnya mati semua'
     };
 

@@ -5,8 +5,9 @@ Instruksi kerja untuk Claude Code di project ini. File ini ngatur **proses & tek
 ## Tentang project
 
 Website sederhana (HTML/CSS/JS vanilla, tanpa framework/build tool) — scrapbook
-ulang tahun: sampul berisi kue yang ditiup, lalu lima lembar foto yang digeser
-horizontal, ditutup surat. Ringan, tanpa dependency berat.
+ulang tahun: sampul berisi kue yang ditiup, lalu empat lembar pesan yang digeser
+horizontal — satu lembar per pengirim (Ayah, Ibu, Kakak), ditutup surat bersama.
+Tanpa foto. Ringan, tanpa dependency berat.
 
 Target: **mobile-first**, baseline 375px, browser modern (Chrome/Safari/Firefox terbaru). Ga perlu support IE atau browser lawas.
 
@@ -43,7 +44,7 @@ Aturan pemisahan file:
 - Semua interaksi utama (klik, drag, hold) harus jalan di touch device — pakai Pointer Events, bukan mouse-only.
 - Struktur CSS: **class-based konsisten**. Jangan campur selector element-based dan class-based buat hal yang sama — bikin override bentrok.
 - Semua nilai warna/spacing/radius/durasi ambil dari CSS custom property di `:root` (didefinisikan di DESIGN.md). Jangan hardcode hex atau px di tengah stylesheet.
-- Penamaan class: kebab-case, bahasa Inggris (`.hero-card`, `.cta-button`). Copy yang tampil ke user: Bahasa Indonesia.
+- Penamaan class: kebab-case, bahasa Inggris (`.hero-card`, `.cta-button`). Copy yang tampil ke user: Bahasa Indonesia, sapaan "kamu" — **jangan pakai "lo"/"gw"**, aturan lengkap di §7 DESIGN.md.
 - Semua efek (sobekan kertas, partikel, animasi) dibikin manual pakai canvas/CSS. Ada budget performa di §5 DESIGN.md — patuhi.
 - Audio disintesis pakai Web Audio API, bukan file MP3/WAV, bukan library. Aturan lengkap di §8 DESIGN.md. Ga ada autoplay — audio cuma boleh mulai dari gesture user.
 

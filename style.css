@@ -14,7 +14,6 @@
   --rust:     #8F4426;
   --tape:     #D9C7A3;
   --sage:     #8A9A78;
-  --polaroid: #FFFFFF;
 
   /* Tipografi — spec §5 */
   --font-body:  'Lora', Georgia, serif;
@@ -37,7 +36,6 @@
   /* Radius — permukaan kertas nyaris tanpa sudut membulat */
   --r-paper: 2px;
   --r-cover: 3px;
-  --r-photo: 0;
   /* Pengecualian: hanya untuk kontrol bulat (titik indikator, tombol ikon),
      bukan untuk permukaan kertas. */
   --r-pill:  999px;
@@ -434,7 +432,7 @@ body {
 
 .dots button[aria-current="true"] { background: var(--rust); opacity: 1; }
 
-/* ---------- Lembar isi: washi tape, polaroid, caption, label ---------- */
+/* ---------- Lembar isi: washi tape, pesan, label ---------- */
 
 .washi {
   position: absolute;
@@ -443,40 +441,41 @@ body {
   opacity: .9;
 }
 
-/* Dua sudut saja. Empat sudut bikin kaku, bukan scrapbook. */
+/* Satu sudut per lembar, dan sudutnya bergantian. Tape di setiap sudut
+   bikin lembar terasa dicetak, bukan ditempel tangan. */
 .washi-tl { top: -8px; left: -12px; transform: rotate(-38deg); }
-.washi-br { bottom: -8px; right: -12px; transform: rotate(-38deg); }
+.washi-tr { top: -8px; right: -12px; transform: rotate(38deg); }
 
-.polaroid {
-  margin: 0;
-  padding: var(--sp-2) var(--sp-2) var(--sp-4);
-  background: var(--polaroid);
-  border-radius: var(--r-photo);
-  box-shadow: var(--sh-photo);
-  transform: rotate(-1.5deg);
+/* Label pengirim. Special Elite, seperti nama yang dicap di sudut arsip. */
+.from {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-label);
+  font-size: var(--fs-label);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--rust);
 }
 
-.shot {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  background: var(--tape);   /* terlihat sebagai bingkai kosong kalau foto gagal */
-  border-radius: var(--r-photo);
+/* Badan pesan. Lora, karena ini prosa yang dibaca utuh — bukan tempelan.
+   Angka di dalamnya ikut font ini, tidak pernah pindah ke Special Elite. */
+.note {
+  margin: 0 auto var(--sp-5);
+  max-width: 32ch;
+  font-variant-numeric: lining-nums;
+  color: var(--cocoa);
+  text-align: left;
 }
 
-.stack { position: relative; padding-bottom: var(--sp-5); }
-.polaroid-a { transform: rotate(2deg) translateX(-6%); width: 62%; }
-.polaroid-b { transform: rotate(-2.5deg) translateX(12%); width: 62%; margin-top: -18%; }
-
-.hand-cap {
-  margin: var(--sp-4) 0 0;
+/* Satu baris tulisan tangan per lembar — kalimat yang sifatnya perasaan.
+   Caveat dibatasi di sini saja supaya tetap terasa sebagai catatan pinggir. */
+.note-hand {
+  margin: 0 auto;
+  max-width: 26ch;
   font-family: var(--font-hand);
   font-weight: 600;
   font-size: var(--fs-hand);
   line-height: 1.4;
-  color: var(--cocoa);
+  color: var(--espresso);
 }
 
 .stamp-date {
@@ -500,7 +499,7 @@ body {
 /* Angka umur — Special Elite, karena terbaca sebagai angka distempel.
    Caveat pecah di ukuran ini; Lora terbaca netral seperti nomor buku teks. */
 .age-display {
-  margin: var(--sp-2) 0 var(--sp-4);
+  margin: var(--sp-2) 0 var(--sp-5);
   font-family: var(--font-label);
   font-size: var(--fs-display);
   letter-spacing: .04em;
@@ -509,26 +508,14 @@ body {
   color: var(--espresso);
 }
 
-/* Angka di dalam kalimat ikut Lora — tidak pernah ganti font di tengah kalimat */
-.letter-line {
-  margin: 0 auto var(--sp-4);
-  max-width: 34ch;
-  font-variant-numeric: lining-nums;
-  color: var(--cocoa);
-}
-
-.letter-line em {
-  font-style: normal;
-  padding: 0 var(--sp-1);
-  border-radius: var(--r-paper);
-  background: var(--tape);
-  color: var(--espresso);
-}
+/* Penutup dibaca sebagai surat, jadi teksnya dipusatkan — beda dari
+   lembar pesan yang rata kiri seperti catatan. */
+.letter .note { text-align: center; }
 
 /* Butuh margin bawah eksplisit: kotak baris Caveat berhenti tepat di tepi
    atas tombol replay, sementara ekor hurufnya keluar dari kotak itu —
    jadi tanda tangannya kelihatan nyenggol tombol walau tidak overlap. */
-.hand-cap.sign { margin: var(--sp-4) 0 var(--sp-4); color: var(--rust); }
+.note-hand.sign { margin: var(--sp-4) auto; color: var(--rust); }
 
 /* ---------- Canvas sobekan kertas (dibuat & dihapus lewat JS) ---------- */
 
