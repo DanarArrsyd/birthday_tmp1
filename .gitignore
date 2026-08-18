@@ -1,9 +1,1 @@
 .DS_Store
-
-# Foto dilarang masuk repo publik — spec §14.
-# Diblokir per direktori, bukan per ekstensi: foto dari HP bisa berupa
-# .heic, .png, atau .webp, dan daftar ekstensi selalu ketinggalan satu.
-# Hapus blok ini SESUDAH repo privat dan hosting pindah.
-assets/photos/*
-!assets/photos/.gitkeep
-!assets/photos/README.md

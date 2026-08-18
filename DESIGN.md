@@ -13,17 +13,17 @@ Buatan tangan **bukan berarti berantakan**. Beda tipis tapi krusial:
 | Berantakan (HINDARI) | Buatan tangan (PAKAI) |
 |---|---|
 | Semua elemen dimiringkan acak | Foto miring kecil dan terkontrol (≤2,5°, tiap lembar beda). Washi tape beda urusan: sengaja curam (−38°) karena tape memang ditempel menyilang |
-| Washi tape di empat sudut tiap foto | Dua sudut, dan tidak selalu sudut yang sama |
+| Washi tape di setiap sudut lembar | Satu sudut per lembar, dan sudutnya bergantian |
 | Tekstur kertas pekat sampai teks susah dibaca | Tekstur di opasitas 0,05 — terasa, tidak mengganggu |
 | Font tulisan tangan dipakai untuk kalimat panjang | Tulisan tangan hanya untuk 1–3 baris perasaan |
 | Angka ganti font tiap muncul | Angka mengikuti konteks kalimatnya |
 | Bayangan tebal abu-abu | Bayangan tipis bernada coklat |
 
-Aturan induk: **ketidaksempurnaan dikontrol, bukan asal.** Kemiringan foto, tape, tekstur kertas — semua elemen "khas scrapbook" itu sengaja dibikin kecil dan konsisten, bukan digenerate acak tiap render. Begitu satu elemen udah jujur "berantakan" (tape miring, kertas bertekstur), elemen di sekitarnya wajib rapi: grid foto lurus, spacing dari skala yang sama, radius kecil yang konsisten di semua permukaan kertas.
+Aturan induk: **ketidaksempurnaan dikontrol, bukan asal.** Tape miring dan tekstur kertas itu sengaja dibikin kecil dan konsisten, bukan digenerate acak tiap render. Begitu satu elemen udah jujur "berantakan" (tape miring, kertas bertekstur), elemen di sekitarnya wajib rapi: teks rata kiri dengan measure yang sama, spacing dari satu skala, radius kecil yang konsisten di semua permukaan kertas.
 
 **Signature interaction: tepat 1 per halaman.** Bukan per lembar, bukan per slide. Satu halaman = satu momen yang orang inget: **tiup lilin di sampul**.
 
-Halaman ini punya tujuh layar (sampul + deck 6 lembar), dan tetap **cuma satu signature**. Lembar-lembar di deck boleh punya interaksi kecil — tap kartu keangkat dikit, titik indikator ganti warna, tombol ganti lembar — tapi harus jelas lebih kecil dari tiup lilin. Kalau ada dua interaksi yang sama-sama minta perhatian, dua-duanya jadi lemah. Sisanya cukup micro-feedback (active state, fade-in) — itu bukan signature, itu sopan santun.
+Halaman ini punya lima layar (sampul + deck 4 lembar), dan tetap **cuma satu signature**. Lembar-lembar di deck boleh punya interaksi kecil — tap kartu keangkat dikit, titik indikator ganti warna, tombol ganti lembar — tapi harus jelas lebih kecil dari tiup lilin. Kalau ada dua interaksi yang sama-sama minta perhatian, dua-duanya jadi lemah. Sisanya cukup micro-feedback (active state, fade-in) — itu bukan signature, itu sopan santun.
 
 ---
 
@@ -33,12 +33,11 @@ Halaman ini punya tujuh layar (sampul + deck 6 lembar), dan tetap **cuma satu si
 :root {
   --paper:    #F4EADA;  /* permukaan lembar (sheet), warna dasar deck */
   --board:    #6B4A2F;  /* sampul buku (cover), background body */
-  --polaroid: #FFFFFF;  /* bingkai foto */
   --espresso: #2E2016;  /* teks paling gelap — angka umur, penekanan di surat */
   --cocoa:    #4A3524;  /* teks body default, di atas --paper */
   --rust:     #8F4426;  /* aksen — nomor halaman, tanda tangan, titik indikator aktif, garis lilin */
   --sepia:    #7A5C3E;  /* teks sekunder yang tersedia di palet, belum dipakai di markup saat ini */
-  --tape:     #D9C7A3;  /* washi tape, isian nyala lilin, fallback bingkai foto kosong */
+  --tape:     #D9C7A3;  /* washi tape, isian nyala lilin */
   --sage:     #8A9A78;  /* aksen dekoratif dingin — dipakai di partikel sobekan kertas */
 }
 ```
@@ -57,9 +56,8 @@ Rasio kontras terukur, dibulatkan:
 
 Konsekuensi praktis:
 
-- **`--tape` dan `--sage` bukan warna teks — titik.** Keduanya dekoratif doang: `--tape` jadi background washi tape, isian nyala lilin, dan fallback bingkai foto kosong; `--sage` cuma muncul di partikel sobekan kertas.
+- **`--tape` dan `--sage` bukan warna teks — titik.** Keduanya dekoratif doang: `--tape` jadi background washi tape dan isian nyala lilin; `--sage` cuma muncul di partikel sobekan kertas (dipakai lewat nilai hex langsung di `script.js`, bukan lewat `var()` di CSS).
 - **`--tape` boleh jadi background di belakang teks `--espresso`** (dipakai di penekanan `<em>` pada surat) — bukan di belakang teks warna lain.
-- **`--polaroid` (putih) cuma bingkai foto**, bukan surface teks.
 - Teks di atas `--board` (sampul) wajib `--paper` — satu-satunya pasangan yang lolos kontras di sana.
 - Teks di atas `--paper` (lembar deck) pakai `--espresso`, `--cocoa`, `--rust`, atau `--sepia` — sesuai peran, bukan asal pilih yang paling gelap.
 - Butuh warna di luar daftar ini? Minta izin dulu. Jangan improvisasi.
@@ -81,7 +79,7 @@ Konsekuensi praktis:
 ```
 
 - **`--font-body` — Lora, weight 400 (600 buat penegasan).** Body text, caption, tombol, label — semua teks fungsional dan prosa.
-- **`--font-hand` — Caveat, weight 600.** Tulisan tangan. Cuma buat kalimat pendek yang sifatnya perasaan (caption foto, tanda tangan). Bukan buat teks fungsional.
+- **`--font-hand` — Caveat, weight 600.** Tulisan tangan. Cuma buat satu baris per lembar yang sifatnya perasaan (`.note-hand`, tanda tangan). Bukan buat teks fungsional.
 - **`--font-label` — Special Elite, weight 400.** Terlihat kayak mesin tik/stempel. Buat tanggal, nomor halaman, angka umur besar, dan label kecil (kicker sampul, status).
 - Load cuma weight yang kepake. Jangan tarik `wght@100..900`.
 - `display=swap` wajib, biar teks ga ilang pas font loading.
@@ -123,7 +121,6 @@ Base 4px. Cuma pakai angka dari skala ini — jangan `margin: 27px`.
 ```css
 --r-paper: 2px;   /* permukaan kertas: tombol, lembar, kue */
 --r-cover: 3px;   /* sampul buku */
---r-photo: 0;     /* foto polaroid — kotak tegas, bukan card membulat */
 --r-pill:  999px; /* HANYA kontrol bulat: titik indikator, tombol ikon suara/panah. Bukan permukaan kertas. */
 ```
 
@@ -135,7 +132,7 @@ Bayangan warna-tinted (coklat hangat), bukan abu-abu generik, biar nyatu sama te
 
 ```css
 --sh-sheet: 0 6px 18px rgba(46, 32, 22, .18);  /* lembar & sampul, diam */
---sh-photo: 0 3px 10px rgba(46, 32, 22, .26);  /* foto, tombol, elemen kecil */
+--sh-photo: 0 3px 10px rgba(46, 32, 22, .26);  /* tombol, kue, elemen kecil */
 --sh-lift:  0 12px 26px rgba(46, 32, 22, .24); /* state terangkat — active/press */
 ```
 
@@ -205,12 +202,34 @@ Library dilarang, jadi efek dibikin manual. Ceiling biar HP ga ngos-ngosan:
   ```
   `--paper` dipilih karena lolos kontras di atas `--board` (sampul) **dan** di atas `--paper`/lembar deck.
 - Elemen yang bisa diklik harus `<button>` atau `<a>`, bukan `<div onclick>` — biar keyboard & screen reader jalan.
-- Gambar dekoratif: `alt=""`. Gambar bermakna (foto di polaroid): alt yang beneran deskriptif, ditulis manusia — bukan placeholder.
+- Halaman ini sengaja tanpa gambar sama sekali. Kalau nanti ada gambar bermakna, alt-nya wajib ditulis manusia — bukan placeholder.
 - Emoji yang membawa arti kasih `role="img"` + `aria-label`. Emoji dekoratif kasih `aria-hidden="true"`.
 
 ### Struktur & navigasi deck
 
-Halaman ini punya **tujuh layar**: sampul (kue + 16 lilin), lalu deck geser horizontal berisi **enam lembar** — lima lembar foto, ditutup satu lembar surat. Foto dibagi 2/2/2/1/1 lembar di lembar 1–5, total delapan slot foto.
+Halaman ini punya **lima layar**: sampul (kue + 16 lilin), lalu deck geser horizontal berisi **empat lembar** — satu lembar per pengirim (Ayah, Ibu, Kakak), ditutup satu lembar surat bersama. Tanpa foto: tiap lembar isinya pesan dalam beberapa paragraf, ditutup tanda tangan tulisan tangan. Label pengirim di atas lembar sengaja tidak ada — tiap pesan sudah menyebut penulisnya di kalimat pertama, jadi label itu cuma mengulang.
+
+**Tiga pengirim tidak boleh terlihat sama.** Pembedanya tiga sumbu kecil, semuanya diambil dari sistem yang sudah ada — bukan tema terpisah:
+
+| Lembar | Tinta tanda tangan | Sudut tape | Kemiringan kertas |
+|---|---|---|---|
+| Ayah | `--espresso` (13,2:1) | kiri-atas, −38° | −0,8° |
+| Ibu | `--rust` (5,8:1) | kanan-atas, +38° | +0,6° |
+| Kakak | `--sepia` (5,1:1) | kiri-atas, −24° | −1,2° |
+| Penutup | `--rust` | kiri-atas, −38° | **0° — sengaja lurus** |
+
+### Kertas sebagai benda
+
+Dua ornamen, dan dua-duanya soal **kertasnya sebagai benda** — bukan motif yang ditempel di atasnya. Balon, ikon, dan gambar tempel sengaja ditolak: itu bahasa clip-art, dan begitu masuk, semua kerja bikin kertas, tape, dan tulisan tangan ketarik turun jadi kartu ucapan toko. Momen meriahnya sudah punya tempat sendiri — sobekan kertas yang meledak pas lilin mati. Kalau tiap lembar juga meriah, momen itu kehilangan kontras.
+
+- **Tepi bawah sobek.** Tepi lurus sempurna adalah kebocoran paling besar bahwa ini sebuah `div`. Dibuat dari mask dua lapis: satu ubin SVG setinggi `--tear-h` menempel di bawah, satu blok solid untuk sisa badan. Lebar ubin dibedakan per pengirim (57/68/63/61px) supaya pengulangan polanya tidak sejajar antar lembar. Browser tanpa dukungan `mask` cuma dapat persegi rapi — turun pelan, bukan rusak.
+- **Bekas lipatan.** Satu garis samar melintang di `.paper::before`, ketinggiannya beda tiap lembar (38/45/34/52%).
+
+**Washi tape wajib berada di luar `.paper`.** Mask sobekan memotong semua yang menjorok keluar kotak kertas, dan justru overhang itulah yang bikin tape terbaca sebagai tape. Karena itu ada `.paper-wrap`: dia yang memegang lebar, rotasi, dan efek terangkat, dan dia tidak di-mask. Tape menempel di wrapper, bukan di kertas — sama seperti di dunia nyata, tape memegang kertas dari luar.
+
+Konsekuensi tata letak: `--tear-h` harus ditambahkan ke padding bawah `.paper`, dan `.page-no` dinaikkan setinggi itu juga. Kalau tidak, teks dan nomor halaman jatuh ke daerah yang dipotong.
+
+Tinta paling gelap dan paling tenang untuk Ayah, yang memang menulis bahwa dirinya tidak banyak bicara. Lembar penutup tidak dimiringkan karena itu suara bersama, bukan satu tangan.
 
 - **Navigasi deck pakai `scroll-snap` CSS native** (`scroll-snap-type: x mandatory` di `.deck`, `scroll-snap-align: center` di `.sheet`) — **bukan** pointer-drag manual bikinan sendiri. Tombol panah dan titik indikator manggil `scrollTo`/`scrollIntoView`, browser yang urus snapping-nya.
 - **`overflow-y: hidden` di `.deck` itu load-bearing, bukan kosmetik.** Kalau satu lembar kontennya kelebihan tinggi, dia bakal kepotong dan keliatan cacat — bukan diam-diam jadi bisa di-scroll vertikal dan nyembunyiin masalahnya. Setiap lembar **wajib muat dalam tinggi konten 619px** di viewport 375×667.
@@ -221,7 +240,8 @@ Halaman ini punya **tujuh layar**: sampul (kue + 16 lilin), lalu deck geser hori
 
 ## 7. Copywriting
 
-- Bahasa Indonesia santai (register lo/gw untuk konteks personal), tapi rapi — bukan alay dengan huruf kapital berlebihan atau tanda seru bertumpuk.
+- Bahasa Indonesia yang hangat tapi rapi. **Sapaan ke penerima: "kamu". Dilarang pakai "lo"/"gw"** — pengirimnya Ayah, Ibu, dan Kakak, dan register itu ga cocok dari orang tua. Bukan juga bahasa alay dengan huruf kapital berlebihan atau tanda seru bertumpuk.
+- Aturan sapaan ini berlaku ke **semua** teks yang tampil, bukan cuma surat: status mikrofon, catatan privasi, dan label tombol ikut.
 - Satu kalimat, satu maksud.
 - Hindari penutup generic ("semoga hari-harimu selalu indah selalu"). Spesifik dan personal jauh lebih kuat daripada template ucapan pasaran. Detail kecil yang cuma kalian berdua tau > kalimat indah yang bisa dikirim ke siapa aja.
 - Maks **1 tanda seru** per section. Maks **1 emoji** per paragraf.
@@ -260,6 +280,15 @@ Kalimba dipakai sebagai default karena timbre-nya kayu, lebih menyatu sama tema 
 ### Melodi
 
 "Happy Birthday to You" — **public domain sejak 2016**, aman dipakai. Tempo ~100 BPM, rasa 3/4.
+
+### Desis kertas saat ganti lembar
+
+Satu noise pendek lewat bandpass 1800Hz (Q 0,8), attack 4ms, decay 140ms. Disintesis seperti nada lain — bukan berkas audio.
+
+Dua aturan yang mengikat:
+
+- **Fungsinya tidak boleh memanggil `ensure()`.** Kalau `AudioContext` belum lahir dari tombol Mulai, dia diam saja. Menghidupkan audio dari pergantian lembar berarti membuat context di luar gestur — persis yang dilarang di bagian atas §8.
+- **Hanya berbunyi kalau lembarnya benar-benar berganti.** `init()` dan `reveal()` sama-sama memanggil `setActive(0)` sementara indeksnya sudah 0, jadi pembukaan deck tidak ikut berdesis. Ketukan panah di ujung deck juga ditolak lebih dulu oleh penjaga batas, jadi tidak ada desis tanpa perpindahan.
 
 Ga usah pakai reverb convolver (butuh file impulse = asset eksternal). Kesan ruang cukup pakai feedback delay pendek (`delayTime` 0.12s, feedback 0.25) — murah, dan cukup.
 
@@ -320,7 +349,12 @@ Fungsional:
 - [ ] Interaksi utama dites di touch (atau minimal pakai Pointer Events, bukan mouse-only)
 - [ ] Semua elemen interaktif punya focus ring yang kelihatan
 - [ ] Bisa di-tab dari atas ke bawah tanpa nyangkut
-- [ ] Setiap foto punya alt yang ditulis manusia, bukan penanda `[GANTI-ALT]`
+- [ ] Ga ada "lo"/"gw" di teks yang tampil, termasuk status mikrofon dan label tombol
+- [ ] Tiga lembar pengirim beda tinta, sudut tape, dan kemiringan — lembar penutup tetap lurus
+- [ ] Washi tape masih menjorok keluar tepi kertas (bukti tape tidak ikut terpotong mask)
+- [ ] Nomor halaman tidak jatuh di zona sobekan
+- [ ] Desis kertas berbunyi tepat sekali per pergantian lembar, dan nol saat deck dibuka
+- [ ] Ganti lembar sebelum menekan Mulai tidak membuat `AudioContext` sama sekali
 
 Audio:
 - [ ] Ga ada suara sebelum user interaksi (dites: reload → diem)

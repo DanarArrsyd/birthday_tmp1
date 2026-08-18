@@ -99,6 +99,47 @@
       }
     }
 
+    /* Desis kertas pas ganti lembar. Noise pendek lewat bandpass — bukan
+       berkas audio, bukan library.
+
+       Sengaja TIDAK memanggil ensure(): kalau AudioContext belum lahir dari
+       tombol Mulai, fungsi ini diam saja. Menghidupkan audio dari pergantian
+       lembar berarti membuat context di luar gestur, dan itu persis yang
+       dilarang di DESIGN.md §8. */
+    var noiseBuf = null;
+
+    function paper() {
+      if (!ctx) return;
+
+      if (!noiseBuf) {
+        var n = Math.floor(ctx.sampleRate * 0.2);
+        noiseBuf = ctx.createBuffer(1, n, ctx.sampleRate);
+        var chan = noiseBuf.getChannelData(0);
+        for (var i = 0; i < n; i++) chan[i] = Math.random() * 2 - 1;
+      }
+
+      var t = ctx.currentTime;
+
+      var src = ctx.createBufferSource();
+      src.buffer = noiseBuf;
+
+      var bp = ctx.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.frequency.value = 1800;
+      bp.Q.value = 0.8;
+
+      var env = ctx.createGain();
+      env.gain.setValueAtTime(0.0001, t);
+      env.gain.exponentialRampToValueAtTime(0.3, t + 0.004);
+      env.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+
+      src.connect(bp);
+      bp.connect(env);
+      env.connect(bus);
+      src.start(t);
+      src.stop(t + 0.2);
+    }
+
     /* Analyser buat mikrofon. Sengaja TIDAK disambung ke destination —
        kalau disambung, suara mikrofon keluar speaker dan bikin feedback. */
     function analyserFor(stream) {
@@ -128,7 +169,7 @@
     function resume() { if (ctx && ctx.state === 'suspended') ctx.resume(); }
 
     return {
-      ensure: ensure, note: note, now: now, analyserFor: analyserFor,
+      ensure: ensure, note: note, paper: paper, now: now, analyserFor: analyserFor,
       setMuted: setMuted, isMuted: isMuted, suspend: suspend, resume: resume
     };
   })();
@@ -312,11 +353,11 @@
     var blowMs = 0, armed = false, sinceKill = 0;
 
     var STATUS = {
-      asking: 'Izinin mikrofonnya dulu ya',
-      calibrating: 'Dengerin sekitar bentar...',
+      asking: 'Izinkan mikrofonnya dulu ya',
+      calibrating: 'Mendengarkan sekitar sebentar...',
       listening: 'Sekarang tiup lilinnya',
-      denied: 'Nggak apa-apa — pakai tombol aja',
-      nomic: 'Browser ini nggak bisa akses mikrofon',
+      denied: 'Tidak apa-apa — pakai tombol saja',
+      nomic: 'Browser ini tidak bisa mengakses mikrofon',
       done: 'Lilinnya mati semua'
     };
 
@@ -530,6 +571,10 @@
     }
 
     function setActive(i) {
+      /* Cuma berbunyi kalau lembarnya benar-benar berganti. init() dan
+         reveal() sama-sama memanggil setActive(0) sementara active sudah 0,
+         jadi pembukaan deck tidak ikut berdesis. */
+      if (i !== active) AUDIO.paper();
       active = i;
       for (var d = 0; d < dots.length; d++) {
         dots[d].setAttribute('aria-current', d === i ? 'true' : 'false');
