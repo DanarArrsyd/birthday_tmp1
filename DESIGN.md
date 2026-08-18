@@ -12,7 +12,7 @@ Buatan tangan **bukan berarti berantakan**. Beda tipis tapi krusial:
 
 | Berantakan (HINDARI) | Buatan tangan (PAKAI) |
 |---|---|
-| Semua elemen dimiringkan acak | Kemiringan kecil dan terkontrol, ≤2,5°, tiap lembar beda |
+| Semua elemen dimiringkan acak | Foto miring kecil dan terkontrol (≤2,5°, tiap lembar beda). Washi tape beda urusan: sengaja curam (−38°) karena tape memang ditempel menyilang |
 | Washi tape di empat sudut tiap foto | Dua sudut, dan tidak selalu sudut yang sama |
 | Tekstur kertas pekat sampai teks susah dibaca | Tekstur di opasitas 0,05 — terasa, tidak mengganggu |
 | Font tulisan tangan dipakai untuk kalimat panjang | Tulisan tangan hanya untuk 1–3 baris perasaan |
