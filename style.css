@@ -415,23 +415,29 @@ body {
 
 /* ---------- Kertas sebagai benda: tepi sobek & bekas lipatan ----------
    Tepi bawah lurus sempurna adalah kebocoran paling besar bahwa ini sebuah
-   div, bukan kertas. Mask di bawah memotong tepi itu jadi bergerigi.
+   div, bukan kertas.
 
-   Dibuat dari dua lapis mask: satu strip SVG setinggi --tear-h yang menempel
-   di bawah, dan satu blok solid untuk sisa badan kertas. Ubinnya diberi lebar
-   berbeda per pengirim supaya pengulangan pola tidak sejajar antar lembar.
+   PENTING — gerigi ini DITIMPA di atas kertas, bukan memotong kertas.
+   Versi sebelumnya memakai mask berlapis pada .paper: satu lapis untuk badan
+   kertas, satu lapis untuk gerigi. Begitu lapis badan gugur di satu browser,
+   yang tersisa cuma pita gerigi dan seluruh isi lembar ikut hilang — persis
+   yang terjadi di Safari iOS. Efek hiasan tidak boleh menentukan apakah isi
+   terlihat. Sekarang gerigi cuma sebuah ::after yang mengecat warna latar di
+   atas tepi bawah kertas: kalau gagal dimuat, yang didapat cuma tepi lurus,
+   dan tulisannya tetap utuh.
 
-   Kalau browser tidak mendukung mask, lembar cuma kembali jadi persegi rapi —
-   turun pelan, bukan rusak. */
-.paper {
-  -webkit-mask:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='61' height='10' preserveAspectRatio='none'%3E%3Cpath d='M0,0 H61 V6 L57,9 L53,5 L49,8 L45,4 L41,9 L37,6 L33,10 L29,5 L25,8 L21,4 L17,9 L13,6 L9,10 L5,5 L0,8 Z' fill='%23000'/%3E%3C/svg%3E")
-      bottom left / var(--tear-w) var(--tear-h) repeat-x,
-    linear-gradient(#000 0 0) top left / 100% calc(100% - var(--tear-h) + 1px) no-repeat;
-  mask:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='61' height='10' preserveAspectRatio='none'%3E%3Cpath d='M0,0 H61 V6 L57,9 L53,5 L49,8 L45,4 L41,9 L37,6 L33,10 L29,5 L25,8 L21,4 L17,9 L13,6 L9,10 L5,5 L0,8 Z' fill='%23000'/%3E%3C/svg%3E")
-      bottom left / var(--tear-w) var(--tear-h) repeat-x,
-    linear-gradient(#000 0 0) top left / 100% calc(100% - var(--tear-h) + 1px) no-repeat;
+   Warna gigi harus sama persis dengan --board (#6B4A2F) karena dia berpura-pura
+   jadi latar. Hex ditulis langsung sebab data URI tidak bisa membaca custom
+   property; kalau --board diubah, angka di sini wajib ikut diubah. */
+.paper::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: var(--tear-h);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='61' height='10' preserveAspectRatio='none'%3E%3Cpath d='M0,8 L5,5 L9,10 L13,6 L17,9 L21,4 L25,8 L29,5 L33,10 L37,6 L41,9 L45,4 L49,8 L53,5 L57,9 L61,6 L61,11 L0,11 Z' fill='%236B4A2F'/%3E%3C/svg%3E")
+    bottom left / var(--tear-w) var(--tear-h) repeat-x;
+  pointer-events: none;
 }
 
 /* Bekas lipatan. Satu garis samar melintang — kertasnya pernah dilipat dan
