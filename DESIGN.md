@@ -209,6 +209,17 @@ Library dilarang, jadi efek dibikin manual. Ceiling biar HP ga ngos-ngosan:
 
 Halaman ini punya **lima layar**: sampul (kue + 16 lilin), lalu deck geser horizontal berisi **empat lembar** — satu lembar per pengirim (Ayah, Ibu, Kakak), ditutup satu lembar surat bersama. Tanpa foto: tiap lembar isinya pesan dalam beberapa paragraf, ditutup tanda tangan tulisan tangan. Label pengirim di atas lembar sengaja tidak ada — tiap pesan sudah menyebut penulisnya di kalimat pertama, jadi label itu cuma mengulang.
 
+**Tiga pengirim tidak boleh terlihat sama.** Pembedanya tiga sumbu kecil, semuanya diambil dari sistem yang sudah ada — bukan tema terpisah:
+
+| Lembar | Tinta tanda tangan | Sudut tape | Kemiringan kertas |
+|---|---|---|---|
+| Ayah | `--espresso` (13,2:1) | kiri-atas, −38° | −0,8° |
+| Ibu | `--rust` (5,8:1) | kanan-atas, +38° | +0,6° |
+| Kakak | `--sepia` (5,1:1) | kiri-atas, −24° | −1,2° |
+| Penutup | `--rust` | kiri-atas, −38° | **0° — sengaja lurus** |
+
+Tinta paling gelap dan paling tenang untuk Ayah, yang memang menulis bahwa dirinya tidak banyak bicara. Lembar penutup tidak dimiringkan karena itu suara bersama, bukan satu tangan.
+
 - **Navigasi deck pakai `scroll-snap` CSS native** (`scroll-snap-type: x mandatory` di `.deck`, `scroll-snap-align: center` di `.sheet`) — **bukan** pointer-drag manual bikinan sendiri. Tombol panah dan titik indikator manggil `scrollTo`/`scrollIntoView`, browser yang urus snapping-nya.
 - **`overflow-y: hidden` di `.deck` itu load-bearing, bukan kosmetik.** Kalau satu lembar kontennya kelebihan tinggi, dia bakal kepotong dan keliatan cacat — bukan diam-diam jadi bisa di-scroll vertikal dan nyembunyiin masalahnya. Setiap lembar **wajib muat dalam tinggi konten 619px** di viewport 375×667.
 - **Titik indikator (`.dots`) harus sinkron dengan lembar yang lagi keliatan** — `aria-current="true"` pindah ke titik yang sesuai index lembar aktif, bukan ketinggalan pas user swipe cepat.
@@ -258,6 +269,15 @@ Kalimba dipakai sebagai default karena timbre-nya kayu, lebih menyatu sama tema 
 ### Melodi
 
 "Happy Birthday to You" — **public domain sejak 2016**, aman dipakai. Tempo ~100 BPM, rasa 3/4.
+
+### Desis kertas saat ganti lembar
+
+Satu noise pendek lewat bandpass 1800Hz (Q 0,8), attack 4ms, decay 140ms. Disintesis seperti nada lain — bukan berkas audio.
+
+Dua aturan yang mengikat:
+
+- **Fungsinya tidak boleh memanggil `ensure()`.** Kalau `AudioContext` belum lahir dari tombol Mulai, dia diam saja. Menghidupkan audio dari pergantian lembar berarti membuat context di luar gestur — persis yang dilarang di bagian atas §8.
+- **Hanya berbunyi kalau lembarnya benar-benar berganti.** `init()` dan `reveal()` sama-sama memanggil `setActive(0)` sementara indeksnya sudah 0, jadi pembukaan deck tidak ikut berdesis. Ketukan panah di ujung deck juga ditolak lebih dulu oleh penjaga batas, jadi tidak ada desis tanpa perpindahan.
 
 Ga usah pakai reverb convolver (butuh file impulse = asset eksternal). Kesan ruang cukup pakai feedback delay pendek (`delayTime` 0.12s, feedback 0.25) — murah, dan cukup.
 
@@ -319,6 +339,9 @@ Fungsional:
 - [ ] Semua elemen interaktif punya focus ring yang kelihatan
 - [ ] Bisa di-tab dari atas ke bawah tanpa nyangkut
 - [ ] Ga ada "lo"/"gw" di teks yang tampil, termasuk status mikrofon dan label tombol
+- [ ] Tiga lembar pengirim beda tinta, sudut tape, dan kemiringan — lembar penutup tetap lurus
+- [ ] Desis kertas berbunyi tepat sekali per pergantian lembar, dan nol saat deck dibuka
+- [ ] Ganti lembar sebelum menekan Mulai tidak membuat `AudioContext` sama sekali
 
 Audio:
 - [ ] Ga ada suara sebelum user interaksi (dites: reload → diem)

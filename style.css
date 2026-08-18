@@ -443,8 +443,29 @@ body {
 
 /* Satu sudut per lembar, dan sudutnya bergantian. Tape di setiap sudut
    bikin lembar terasa dicetak, bukan ditempel tangan. */
-.washi-tl { top: -8px; left: -12px; transform: rotate(-38deg); }
-.washi-tr { top: -8px; right: -12px; transform: rotate(38deg); }
+.washi-tl   { top: -8px; left: -12px;  transform: rotate(-38deg); }
+.washi-tr   { top: -8px; right: -12px; transform: rotate(38deg); }
+.washi-tilt { top: -6px; left: -10px;  transform: rotate(-24deg); }
+
+/* ---------- Tiga pengirim, tiga suara ----------
+   Ayah, Ibu, dan Kakak menulis hal yang berbeda, jadi lembarnya tidak boleh
+   terlihat sama persis. Pembedanya tiga: warna tinta tanda tangan, sudut
+   tape, dan kemiringan kertas. Ketiganya kecil dan diambil dari sistem yang
+   sudah ada — bukan tema terpisah, cuma cukup untuk terasa ditulis orang
+   yang berbeda. Batas kemiringan tetap 2,5 derajat seperti §1 DESIGN.md. */
+
+.paper-ayah  { transform: rotate(-0.8deg); }
+.paper-ibu   { transform: rotate(0.6deg); }
+.paper-kakak { transform: rotate(-1.2deg); }
+
+/* Tinta paling gelap dan paling tenang untuk Ayah, yang memang menulis
+   bahwa dirinya tidak banyak bicara. --sepia akhirnya punya pekerjaan. */
+.paper-ayah  .note-hand.sign { color: var(--espresso); }
+.paper-ibu   .note-hand.sign { color: var(--rust); }
+.paper-kakak .note-hand.sign { color: var(--sepia); }
+
+/* Lembar penutup sengaja lurus: itu suara bersama, bukan satu tangan. */
+.letter { transform: none; }
 
 /* Badan pesan. Lora, karena ini prosa yang dibaca utuh — bukan tempelan.
    Angka di dalamnya ikut font ini, tidak pernah pindah ke Special Elite. */
