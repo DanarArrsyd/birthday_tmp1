@@ -218,6 +218,17 @@ Halaman ini punya **lima layar**: sampul (kue + 16 lilin), lalu deck geser horiz
 | Kakak | `--sepia` (5,1:1) | kiri-atas, −24° | −1,2° |
 | Penutup | `--rust` | kiri-atas, −38° | **0° — sengaja lurus** |
 
+### Kertas sebagai benda
+
+Dua ornamen, dan dua-duanya soal **kertasnya sebagai benda** — bukan motif yang ditempel di atasnya. Balon, ikon, dan gambar tempel sengaja ditolak: itu bahasa clip-art, dan begitu masuk, semua kerja bikin kertas, tape, dan tulisan tangan ketarik turun jadi kartu ucapan toko. Momen meriahnya sudah punya tempat sendiri — sobekan kertas yang meledak pas lilin mati. Kalau tiap lembar juga meriah, momen itu kehilangan kontras.
+
+- **Tepi bawah sobek.** Tepi lurus sempurna adalah kebocoran paling besar bahwa ini sebuah `div`. Dibuat dari mask dua lapis: satu ubin SVG setinggi `--tear-h` menempel di bawah, satu blok solid untuk sisa badan. Lebar ubin dibedakan per pengirim (57/68/63/61px) supaya pengulangan polanya tidak sejajar antar lembar. Browser tanpa dukungan `mask` cuma dapat persegi rapi — turun pelan, bukan rusak.
+- **Bekas lipatan.** Satu garis samar melintang di `.paper::before`, ketinggiannya beda tiap lembar (38/45/34/52%).
+
+**Washi tape wajib berada di luar `.paper`.** Mask sobekan memotong semua yang menjorok keluar kotak kertas, dan justru overhang itulah yang bikin tape terbaca sebagai tape. Karena itu ada `.paper-wrap`: dia yang memegang lebar, rotasi, dan efek terangkat, dan dia tidak di-mask. Tape menempel di wrapper, bukan di kertas — sama seperti di dunia nyata, tape memegang kertas dari luar.
+
+Konsekuensi tata letak: `--tear-h` harus ditambahkan ke padding bawah `.paper`, dan `.page-no` dinaikkan setinggi itu juga. Kalau tidak, teks dan nomor halaman jatuh ke daerah yang dipotong.
+
 Tinta paling gelap dan paling tenang untuk Ayah, yang memang menulis bahwa dirinya tidak banyak bicara. Lembar penutup tidak dimiringkan karena itu suara bersama, bukan satu tangan.
 
 - **Navigasi deck pakai `scroll-snap` CSS native** (`scroll-snap-type: x mandatory` di `.deck`, `scroll-snap-align: center` di `.sheet`) — **bukan** pointer-drag manual bikinan sendiri. Tombol panah dan titik indikator manggil `scrollTo`/`scrollIntoView`, browser yang urus snapping-nya.
@@ -340,6 +351,8 @@ Fungsional:
 - [ ] Bisa di-tab dari atas ke bawah tanpa nyangkut
 - [ ] Ga ada "lo"/"gw" di teks yang tampil, termasuk status mikrofon dan label tombol
 - [ ] Tiga lembar pengirim beda tinta, sudut tape, dan kemiringan — lembar penutup tetap lurus
+- [ ] Washi tape masih menjorok keluar tepi kertas (bukti tape tidak ikut terpotong mask)
+- [ ] Nomor halaman tidak jatuh di zona sobekan
 - [ ] Desis kertas berbunyi tepat sekali per pergantian lembar, dan nol saat deck dibuka
 - [ ] Ganti lembar sebelum menekan Mulai tidak membuat `AudioContext` sama sekali
 

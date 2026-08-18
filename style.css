@@ -381,10 +381,25 @@ body {
    §9 DESIGN.md, bukan lewat pemotongan diam-diam. */
 .sheet { overflow-y: auto; }
 
-.paper {
+/* Pembungkus kertas. Dia yang memegang lebar, rotasi, dan efek terangkat —
+   dan yang paling penting, dia TIDAK di-mask. Washi tape menempel di sini,
+   di luar .paper, karena tape memegang kertas dari luar: kalau tape ditaruh
+   di dalam .paper, mask sobekan ikut memotong bagian tape yang menjorok
+   keluar tepi, dan justru overhang itulah yang bikin dia terbaca sebagai tape. */
+.paper-wrap {
+  position: relative;
   width: 100%;
   max-width: 21rem;
-  padding: var(--sp-5) var(--sp-4);
+  transition: transform var(--dur-micro) var(--ease-lift);
+}
+
+.paper {
+  width: 100%;
+  /* Tinggi zona sobekan. Padding bawah ditambah segini supaya teks tidak
+     pernah jatuh ke daerah yang dipotong mask. */
+  --tear-h: 10px;
+  --tear-w: 61px;
+  padding: var(--sp-5) var(--sp-4) calc(var(--sp-5) + var(--tear-h));
   border-radius: var(--r-paper);
   background-color: var(--paper);
   background-image: var(--paper-grain);
@@ -395,7 +410,43 @@ body {
               box-shadow var(--dur-micro) var(--ease-lift);
 }
 
-.sheet:active .paper { transform: translateY(-2px); box-shadow: var(--sh-lift); }
+.sheet:active .paper-wrap { transform: translateY(-2px); }
+.sheet:active .paper { box-shadow: var(--sh-lift); }
+
+/* ---------- Kertas sebagai benda: tepi sobek & bekas lipatan ----------
+   Tepi bawah lurus sempurna adalah kebocoran paling besar bahwa ini sebuah
+   div, bukan kertas. Mask di bawah memotong tepi itu jadi bergerigi.
+
+   Dibuat dari dua lapis mask: satu strip SVG setinggi --tear-h yang menempel
+   di bawah, dan satu blok solid untuk sisa badan kertas. Ubinnya diberi lebar
+   berbeda per pengirim supaya pengulangan pola tidak sejajar antar lembar.
+
+   Kalau browser tidak mendukung mask, lembar cuma kembali jadi persegi rapi —
+   turun pelan, bukan rusak. */
+.paper {
+  -webkit-mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='61' height='10' preserveAspectRatio='none'%3E%3Cpath d='M0,0 H61 V6 L57,9 L53,5 L49,8 L45,4 L41,9 L37,6 L33,10 L29,5 L25,8 L21,4 L17,9 L13,6 L9,10 L5,5 L0,8 Z' fill='%23000'/%3E%3C/svg%3E")
+      bottom left / var(--tear-w) var(--tear-h) repeat-x,
+    linear-gradient(#000 0 0) top left / 100% calc(100% - var(--tear-h) + 1px) no-repeat;
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='61' height='10' preserveAspectRatio='none'%3E%3Cpath d='M0,0 H61 V6 L57,9 L53,5 L49,8 L45,4 L41,9 L37,6 L33,10 L29,5 L25,8 L21,4 L17,9 L13,6 L9,10 L5,5 L0,8 Z' fill='%23000'/%3E%3C/svg%3E")
+      bottom left / var(--tear-w) var(--tear-h) repeat-x,
+    linear-gradient(#000 0 0) top left / 100% calc(100% - var(--tear-h) + 1px) no-repeat;
+}
+
+/* Bekas lipatan. Satu garis samar melintang — kertasnya pernah dilipat dan
+   disimpan, bukan baru keluar dari printer. Posisinya beda tiap pengirim. */
+.paper::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  top: 38%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%, rgba(46, 32, 22, .11) 10%,
+    rgba(46, 32, 22, .11) 90%, transparent 100%);
+  pointer-events: none;
+}
 
 .deck-nav {
   position: fixed;
@@ -454,9 +505,16 @@ body {
    sudah ada — bukan tema terpisah, cuma cukup untuk terasa ditulis orang
    yang berbeda. Batas kemiringan tetap 2,5 derajat seperti §1 DESIGN.md. */
 
-.paper-ayah  { transform: rotate(-0.8deg); }
-.paper-ibu   { transform: rotate(0.6deg); }
-.paper-kakak { transform: rotate(-1.2deg); }
+.paper-ayah  { transform: rotate(-0.8deg); --tear-w: 57px; }
+.paper-ibu   { transform: rotate(0.6deg);  --tear-w: 68px; }
+.paper-kakak { transform: rotate(-1.2deg); --tear-w: 63px; }
+.letter-wrap { transform: none; }
+
+/* Lipatan tidak pernah jatuh di ketinggian yang sama antar lembar. */
+.paper-ayah  .paper::before { top: 38%; }
+.paper-ibu   .paper::before { top: 45%; }
+.paper-kakak .paper::before { top: 34%; }
+.letter-wrap .paper::before { top: 52%; }
 
 /* Tinta paling gelap dan paling tenang untuk Ayah, yang memang menulis
    bahwa dirinya tidak banyak bicara. --sepia akhirnya punya pekerjaan. */
@@ -465,7 +523,6 @@ body {
 .paper-kakak .note-hand.sign { color: var(--sepia); }
 
 /* Lembar penutup sengaja lurus: itu suara bersama, bukan satu tangan. */
-.letter { transform: none; }
 
 /* Badan pesan. Lora, karena ini prosa yang dibaca utuh — bukan tempelan.
    Angka di dalamnya ikut font ini, tidak pernah pindah ke Special Elite. */
@@ -500,7 +557,8 @@ body {
 
 .page-no {
   position: absolute;
-  right: var(--sp-3); bottom: var(--sp-2);
+  /* Dinaikkan setinggi zona sobekan, kalau tidak angkanya ikut terpotong. */
+  right: var(--sp-3); bottom: calc(var(--sp-2) + var(--tear-h));
   font-family: var(--font-label);
   font-size: var(--fs-label);
   font-variant-numeric: tabular-nums;
