@@ -8,38 +8,20 @@
 <title>Buat Dinar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&family=Dancing+Script:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Caveat:wght@600&family=Special+Elite&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body data-slide="gate">
-
-<div class="backdrop" aria-hidden="true">
-  <span class="blob blob-a"></span>
-  <span class="blob blob-b"></span>
-  <span class="blob blob-c"></span>
-</div>
+<body>
 
 <button class="sound-toggle" id="soundToggle" aria-pressed="false">
   <span class="sound-icon" aria-hidden="true"></span>
   <span class="sr-only">Matikan suara</span>
 </button>
 
-<main class="stage">
-
-  <!-- ============ SLIDE 1 — pembuka ============ -->
-  <section class="slide slide-gate" id="slideGate">
-    <p class="kicker">Dari kakak lo</p>
-    <h1 class="gate-name">Dinar</h1>
-    <p class="lede">Ada kue nunggu di dalem.</p>
-    <button class="btn btn-primary btn-start" id="startBtn" type="button">Buka</button>
-  </section>
-
-  <!-- ============ SLIDE 2 — kue + lilin (signature) ============ -->
-  <section class="slide slide-cake" id="slideCake">
-    <h2 class="cake-title">16 lilin buat lo</h2>
-
-    <!-- Kuota font sambung 1 dari 2 -->
-    <p class="script-line">Tutup mata, bikin permintaan</p>
+<div class="cover-stage" id="coverStage">
+  <section class="cover" id="cover">
+    <p class="cover-kicker">Dari kakak lo</p>
+    <h1 class="cover-name">Dinar</h1>
 
     <div class="cake" aria-hidden="true">
       <div class="candles" id="candles"></div>
@@ -48,51 +30,125 @@
       <div class="cake-plate"></div>
     </div>
 
-    <p class="cake-status" id="cakeStatus" aria-live="polite">Siap-siap ya</p>
-    <p class="privacy-note" id="privacyNote">Suaranya diproses di HP lo doang, nggak dikirim ke mana-mana.</p>
+    <p class="cover-status" id="cakeStatus" aria-live="polite">Siap-siap ya</p>
+    <p class="cover-privacy" id="privacyNote">Suaranya diproses di HP lo doang, nggak dikirim ke mana-mana.</p>
 
-    <button class="btn btn-ghost btn-manual" id="manualBtn" type="button" hidden>Tiup manual</button>
-
-    <!-- Cuma muncul kalau URL-nya ?debug=1 — buat nyetel ambang deteksi di HP asli -->
+    <button class="btn btn-ghost" id="startBtn" type="button">Mulai</button>
+    <button class="btn btn-ghost" id="manualBtn" type="button" hidden>Tiup manual</button>
     <p class="mic-debug" id="micDebug" hidden></p>
   </section>
+</div>
 
-  <!-- ============================================================
-       SLIDE 3 — COPY SEMENTARA
-       Semua yang ditandai GANTI wajib diisi sebelum dikirim ke Dinar.
-       ============================================================ -->
-  <section class="slide slide-card" id="slideCard">
-    <div class="card" id="card" tabindex="-1" aria-live="polite">
-      <p class="kicker">
-        <span role="img" aria-label="kue ulang tahun">🎂</span> 16 tahun
-      </p>
+<div class="deck" id="deck" hidden>
+  <section class="sheet" aria-label="Lembar 1 dari 6" tabindex="-1">
+    <div class="paper">
+      <span class="washi washi-tl" aria-hidden="true"></span>
+      <span class="washi washi-br" aria-hidden="true"></span>
 
-      <h2 class="card-title">Selamat ulang tahun, Dinar</h2>
+      <div class="stack">
+        <figure class="polaroid polaroid-a">
+          <img class="shot" src="assets/photos/01.jpg" alt="[GANTI-ALT: jelaskan isi foto ini]" width="1200" height="900" loading="lazy" decoding="async">
+        </figure>
+        <figure class="polaroid polaroid-b">
+          <img class="shot" src="assets/photos/02.jpg" alt="[GANTI-ALT: jelaskan isi foto ini]" width="1200" height="900" loading="lazy" decoding="async">
+          <figcaption class="stamp-date">2010 &middot; 03</figcaption>
+        </figure>
+      </div>
 
-      <!-- GANTI 1: kebiasaan konyol dia waktu kecil -->
-      <p class="card-line">
-        Gak kerasa udah 16. Rasanya baru kemarin lo <em>[GANTI: kebiasaan konyol dia waktu masih bocah]</em>.
-      </p>
-
-      <!-- GANTI 2: satu hal spesifik yang lo kagumin dari dia SEKARANG.
-           Jangan "baik hati" atau "rajin" — itu bisa dikirim ke siapa aja. -->
-      <p class="card-line">
-        <em>[GANTI: satu hal spesifik yang lo diam-diam kagumin dari dia sekarang]</em>
-      </p>
-
-      <!-- GANTI 3: satu hal konkret yang dia lagi kejar tahun ini -->
-      <p class="card-line">
-        Tahun ini semoga <em>[GANTI: satu hal konkret yang dia lagi kejar]</em>. Gw ada kalau lo butuh.
-      </p>
-
-      <!-- Kuota font sambung 2 dari 2 -->
-      <p class="script-line card-sign">— Kakak lo</p>
-
-      <button class="btn btn-primary" id="replay" type="button">Puter lagunya lagi</button>
+      <p class="hand-cap">Lo yang ini, ga pernah mau diem.</p>
+      <span class="page-no">01</span>
     </div>
   </section>
+  <section class="sheet" aria-label="Lembar 2 dari 6" tabindex="-1">
+    <div class="paper">
+      <span class="washi washi-tl" aria-hidden="true"></span>
+      <span class="washi washi-br" aria-hidden="true"></span>
 
-</main>
+      <div class="stack">
+        <figure class="polaroid polaroid-a">
+          <img class="shot" src="assets/photos/03.jpg" alt="[GANTI-ALT: jelaskan isi foto ini]" width="1200" height="900" loading="lazy" decoding="async">
+        </figure>
+        <figure class="polaroid polaroid-b">
+          <img class="shot" src="assets/photos/04.jpg" alt="[GANTI-ALT: jelaskan isi foto ini]" width="1200" height="900" loading="lazy" decoding="async">
+          <figcaption class="stamp-date">2015 &middot; 07</figcaption>
+        </figure>
+      </div>
+
+      <p class="hand-cap">Masih sama berisiknya, cuma makin gede.</p>
+      <span class="page-no">02</span>
+    </div>
+  </section>
+  <section class="sheet" aria-label="Lembar 3 dari 6" tabindex="-1">
+    <div class="paper">
+      <span class="washi washi-tl" aria-hidden="true"></span>
+      <span class="washi washi-br" aria-hidden="true"></span>
+
+      <div class="stack">
+        <figure class="polaroid polaroid-a">
+          <img class="shot" src="assets/photos/05.jpg" alt="[GANTI-ALT: jelaskan isi foto ini]" width="1200" height="900" loading="lazy" decoding="async">
+        </figure>
+        <figure class="polaroid polaroid-b">
+          <img class="shot" src="assets/photos/06.jpg" alt="[GANTI-ALT: jelaskan isi foto ini]" width="1200" height="900" loading="lazy" decoding="async">
+          <figcaption class="stamp-date">2019 &middot; 11</figcaption>
+        </figure>
+      </div>
+
+      <p class="hand-cap">Fase paling rusuh, jujur kita kangen itu.</p>
+      <span class="page-no">03</span>
+    </div>
+  </section>
+  <section class="sheet" aria-label="Lembar 4 dari 6" tabindex="-1">
+    <div class="paper">
+      <span class="washi washi-tl" aria-hidden="true"></span>
+      <span class="washi washi-br" aria-hidden="true"></span>
+
+      <figure class="polaroid">
+        <img class="shot" src="assets/photos/07.jpg" alt="[GANTI-ALT: jelaskan isi foto ini]" width="1200" height="900" loading="lazy" decoding="async">
+        <figcaption class="stamp-date">2023 &middot; 05</figcaption>
+      </figure>
+
+      <p class="hand-cap">Udah mulai punya gaya sendiri.</p>
+      <span class="page-no">04</span>
+    </div>
+  </section>
+  <section class="sheet" aria-label="Lembar 5 dari 6" tabindex="-1">
+    <div class="paper">
+      <span class="washi washi-tl" aria-hidden="true"></span>
+      <span class="washi washi-br" aria-hidden="true"></span>
+
+      <figure class="polaroid">
+        <img class="shot" src="assets/photos/08.jpg" alt="[GANTI-ALT: jelaskan isi foto ini]" width="1200" height="900" loading="lazy" decoding="async">
+        <figcaption class="stamp-date">2026 &middot; 08</figcaption>
+      </figure>
+
+      <p class="hand-cap">Dan sekarang lo di sini.</p>
+      <span class="page-no">05</span>
+    </div>
+  </section>
+  <section class="sheet" aria-label="Lembar 6 dari 6" tabindex="-1">
+    <div class="paper letter">
+      <span class="washi washi-tl" aria-hidden="true"></span>
+
+      <p class="stamp-date">17 &middot; 08 &middot; 2026</p>
+      <p class="age-display">16</p>
+
+      <p class="letter-line">Gak kerasa udah 16. Rasanya baru kemarin lo <em>[GANTI: kebiasaan konyol dia waktu masih bocah]</em>.</p>
+      <p class="letter-line"><em>[GANTI: satu hal spesifik yang lo diam-diam kagumin dari dia sekarang]</em></p>
+      <p class="letter-line">Tahun ini semoga <em>[GANTI: satu hal konkret yang dia lagi kejar]</em>. Gw ada kalau lo butuh.</p>
+
+      <p class="hand-cap sign">&mdash; Kakak lo</p>
+
+      <button class="btn btn-ghost" id="replay" type="button">Puter lagunya lagi</button>
+      <span class="page-no">06</span>
+    </div>
+  </section>
+</div>
+
+<nav class="deck-nav" id="deckNav" hidden>
+  <button class="arrow" id="prevBtn" type="button" aria-label="Lembar sebelumnya">&#8249;</button>
+  <div class="dots" id="dots"></div>
+  <button class="arrow" id="nextBtn" type="button" aria-label="Lembar berikutnya">&#8250;</button>
+</nav>
 
 <script src="script.js"></script>
 </body>

@@ -1,5 +1,5 @@
 /* =========================================================
-   Buat Dinar — slide, audio, deteksi tiupan, confetti
+   Buat Dinar — sampul, deck, audio, deteksi tiupan, partikel kertas
    Vanilla, tanpa dependency. Referensi: DESIGN.md §5, §6, §8
    ========================================================= */
 
@@ -19,7 +19,8 @@
     var muted = false;
 
     // Preset instrumen — DESIGN.md §8.
-    // Ganti CURRENT ke 'kalimba' kalau music box kerasa kemanisan.
+    // Kalimba: timbre kayu, menyatu dengan kraft.
+    // Ganti ke 'musicbox' kalau ingin lebih berdenting.
     var INSTRUMENTS = {
       musicbox: {
         partials: [[1, 1.00], [2, 0.25], [3.01, 0.08]],
@@ -30,7 +31,7 @@
         attack: 0.008, decay: 0.9, cutoff: 2600
       }
     };
-    var CURRENT = 'musicbox';
+    var CURRENT = 'kalimba';
 
     // Wajib dipanggil dari dalam event handler user. Browser blokir kalau nggak.
     function ensure() {
@@ -169,121 +170,105 @@
   }
 
   /* =======================================================
-     CONFETTI — canvas manual, ada budget. DESIGN.md §5
+     PARTICLES — sobekan kertas, canvas manual, ada budget. DESIGN.md §5
      ======================================================= */
 
-  var CONFETTI_COLORS = ['#FF4D8D', '#FFD6E5', '#FFC94D', '#A78BFA', '#FFFFFF'];
+  var PARTICLES = (function () {
+    var COLORS = ['#F4EADA', '#D9C7A3', '#6B4A2F', '#8F4426', '#8A9A78'];
 
-  function burstConfetti() {
-    if (reduceMotion.matches) return;  // skip total, bukan dipercepat
+    function burst() {
+      if (reduceMotion.matches) return;  // skip total, bukan dipercepat
 
-    var canvas = document.createElement('canvas');
-    canvas.className = 'confetti';
-    canvas.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(canvas);
+      var canvas = document.createElement('canvas');
+      canvas.className = 'scraps';
+      canvas.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(canvas);
 
-    var ctx2d = canvas.getContext('2d');
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);  // cap 2
-    var w = window.innerWidth;
-    var h = window.innerHeight;
+      var ctx2d = canvas.getContext('2d');
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);  // cap 2
+      var w = window.innerWidth;
+      var h = window.innerHeight;
 
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = w + 'px';
-    canvas.style.height = h + 'px';
-    ctx2d.scale(dpr, dpr);
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx2d.scale(dpr, dpr);
 
-    var count = w < 768 ? 80 : 150;   // budget DESIGN.md §5
-    var LIFE = 3000;                  // maks 3 detik
-    var parts = [];
+      var count = w < 768 ? 80 : 150;   // budget DESIGN.md §5
+      var LIFE = 3000;                  // maks 3 detik
+      var parts = [];
 
-    for (var i = 0; i < count; i++) {
-      var angle = Math.random() * Math.PI * 2;
-      var speed = 300 + Math.random() * 600;
-      parts.push({
-        x: w / 2, y: h / 2,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - 200,
-        size: 5 + Math.random() * 7,
-        rot: Math.random() * Math.PI,
-        vr: (Math.random() - 0.5) * 8,
-        color: CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0],
-        round: Math.random() < 0.35
-      });
-    }
+      for (var i = 0; i < count; i++) {
+        var angle = Math.random() * Math.PI * 2;
+        var speed = 300 + Math.random() * 600;
+        parts.push({
+          x: w / 2, y: h / 2,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 200,
+          w: 6 + Math.random() * 9,
+          h: 3 + Math.random() * 5,
+          rot: Math.random() * Math.PI,
+          vr: (Math.random() - 0.5) * 4,   // kertas lebih berat dari foil: putarannya lebih lambat
+          color: COLORS[(Math.random() * COLORS.length) | 0]
+        });
+      }
 
-    var start = null, last = null, raf = null;
+      var start = null, last = null, raf = null;
 
-    function frame(ts) {
-      if (start === null) { start = ts; last = ts; }
-      var dt = Math.min((ts - last) / 1000, 0.05);
-      last = ts;
+      function frame(ts) {
+        if (start === null) { start = ts; last = ts; }
+        var dt = Math.min((ts - last) / 1000, 0.05);
+        last = ts;
 
-      var elapsed = ts - start;
-      if (elapsed >= LIFE) { stop(); return; }
+        var elapsed = ts - start;
+        if (elapsed >= LIFE) { stop(); return; }
 
-      var fade = elapsed > LIFE - 800 ? (LIFE - elapsed) / 800 : 1;
-      ctx2d.clearRect(0, 0, w, h);
+        var fade = elapsed > LIFE - 800 ? (LIFE - elapsed) / 800 : 1;
+        ctx2d.clearRect(0, 0, w, h);
 
-      for (var j = 0; j < parts.length; j++) {
-        var p = parts[j];
-        p.vy += 1400 * dt;
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
-        p.rot += p.vr * dt;
+        for (var j = 0; j < parts.length; j++) {
+          var p = parts[j];
+          p.vy += 1400 * dt;
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.rot += p.vr * dt;
 
-        ctx2d.save();
-        ctx2d.globalAlpha = fade;
-        ctx2d.translate(p.x, p.y);
-        ctx2d.rotate(p.rot);
-        ctx2d.fillStyle = p.color;
-        if (p.round) {
-          ctx2d.beginPath();
-          ctx2d.arc(0, 0, p.size / 2, 0, Math.PI * 2);
-          ctx2d.fill();
-        } else {
-          ctx2d.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+          ctx2d.save();
+          ctx2d.globalAlpha = fade;
+          ctx2d.translate(p.x, p.y);
+          ctx2d.rotate(p.rot);
+          ctx2d.fillStyle = p.color;
+          ctx2d.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx2d.restore();
         }
-        ctx2d.restore();
+
+        raf = window.requestAnimationFrame(frame);
+      }
+
+      function stop() {
+        if (raf) window.cancelAnimationFrame(raf);
+        raf = null;
+        parts.length = 0;
+        canvas.remove();
       }
 
       raf = window.requestAnimationFrame(frame);
     }
 
-    function stop() {
-      if (raf) window.cancelAnimationFrame(raf);
-      raf = null;
-      parts.length = 0;
-      canvas.remove();
-    }
-
-    raf = window.requestAnimationFrame(frame);
-  }
+    return { burst: burst };
+  })();
 
   /* =======================================================
      SLIDE
      ======================================================= */
 
-  var card = document.getElementById('card');
   var replayBtn = document.getElementById('replay');
   var startBtn = document.getElementById('startBtn');
-
-  function goTo(name) { document.body.dataset.slide = name; }
 
   function lockReplay(ms) {
     replayBtn.disabled = true;
     window.setTimeout(function () { replayBtn.disabled = false; }, ms);
-  }
-
-  function openCard() {
-    goTo('card');
-    burstConfetti();
-    playMelody();
-    lockReplay(melodyDuration() * 1000);
-    // Fokus ikut pindah — slide sebelumnya di-display:none, jangan
-    // tinggalin fokus di body. Sasarannya kartu, bukan tombol replay:
-    // replay lagi disabled pas ini jalan.
-    window.setTimeout(function () { card.focus(); }, 100);
   }
 
   /* =======================================================
@@ -454,8 +439,8 @@
       stopMic();
       setStatus('done');
       manualBtn.hidden = true;
-      // Kasih jeda buat asapnya naik dulu, baru pindah slide
-      window.setTimeout(openCard, reduceMotion.matches ? 200 : 900);
+      // Jeda supaya asap sempat naik, baru sampul dibuka
+      window.setTimeout(COVER.open, reduceMotion.matches ? 200 : 900);
     }
 
     function manualBlow() {
@@ -473,7 +458,6 @@
       if (started) return;   // tanpa ini, panggilan kedua nambah 16 lilin lagi
       started = true;
 
-      build();
       setStatus('asking');
 
       // file:// atau browser lawas -> API-nya ga eksis. Langsung manual.
@@ -515,7 +499,133 @@
 
     manualBtn.addEventListener('click', manualBlow);
 
+    build();
+
     return { start: start, stopMic: stopMic };
+  })();
+
+  /* =======================================================
+     DECK — geser horizontal berbasis scroll-snap native.
+     Drag manual sengaja ditolak: momentum harus disimulasi,
+     keyboard mati, dan di iOS bentrok sama gestur back.
+     ======================================================= */
+
+  var DECK = (function () {
+    var deck = document.getElementById('deck');
+    var nav = document.getElementById('deckNav');
+    var dotsWrap = document.getElementById('dots');
+    var prevBtn = document.getElementById('prevBtn');
+    var nextBtn = document.getElementById('nextBtn');
+    var sheets = [];
+    var dots = [];
+    var active = 0;
+
+    function goTo(i) {
+      if (i < 0 || i >= sheets.length) return;
+      deck.scrollTo({ left: sheets[i].offsetLeft, behavior: 'smooth' });
+      // Jangan menunggu IntersectionObserver: callback-nya baru datang setelah
+      // animasi scroll selesai, jadi ketukan cepat berikutnya akan menghitung
+      // dari indeks yang basi dan menembak lembar yang sama.
+      setActive(i);
+    }
+
+    function setActive(i) {
+      active = i;
+      for (var d = 0; d < dots.length; d++) {
+        dots[d].setAttribute('aria-current', d === i ? 'true' : 'false');
+      }
+      prevBtn.disabled = (i === 0);
+      nextBtn.disabled = (i === sheets.length - 1);
+    }
+
+    function init() {
+      sheets = Array.prototype.slice.call(deck.querySelectorAll('.sheet'));
+
+      for (var i = 0; i < sheets.length; i++) {
+        (function (idx) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('aria-label', 'Ke lembar ' + (idx + 1));
+          b.addEventListener('click', function () { goTo(idx); });
+          dotsWrap.appendChild(b);
+          dots.push(b);
+        })(i);
+      }
+
+      // IntersectionObserver, bukan event scroll: tidak perlu debounce,
+      // dan tidak ikut jalan tiap frame saat momentum masih berjalan.
+      var io = new IntersectionObserver(function (entries) {
+        for (var e = 0; e < entries.length; e++) {
+          if (entries[e].isIntersecting) setActive(sheets.indexOf(entries[e].target));
+        }
+      }, { root: deck, threshold: 0.6 });
+
+      for (var s = 0; s < sheets.length; s++) io.observe(sheets[s]);
+
+      prevBtn.addEventListener('click', function () { goTo(active - 1); });
+      nextBtn.addEventListener('click', function () { goTo(active + 1); });
+
+      setActive(0);
+    }
+
+    function reveal() {
+      deck.hidden = false;
+      nav.hidden = false;
+      setActive(0);
+      sheets[0].focus();
+    }
+
+    return { init: init, reveal: reveal, goTo: goTo };
+  })();
+
+  /* =======================================================
+     COVER — sampul terbuka, lalu serahkan ke DECK.
+     Rantai satu arah: CAKE -> COVER -> DECK. COVER tidak
+     pernah memanggil balik ke CAKE.
+     ======================================================= */
+
+  var COVER = (function () {
+    var stage = document.getElementById('coverStage');
+    var cover = document.getElementById('cover');
+    var opened = false;
+
+    function finish() {
+      stage.hidden = true;     // buang lapisan komposit yang sudah tak terpakai
+      DECK.reveal();
+
+      // Perayaan pindah ke sini. Sebelumnya dipicu dari fungsi lama
+      // yang sudah dihapus — tanpa dua baris ini lagu dan partikel
+      // hilang tanpa suara.
+      PARTICLES.burst();
+      playMelody();
+      lockReplay(melodyDuration() * 1000);
+    }
+
+    function open() {
+      if (opened) return;
+      opened = true;
+
+      cover.classList.add('is-open');
+
+      // transitionend tetap menyala di mode reduced-motion karena
+      // durasinya jadi 0.01ms, bukan nol.
+      var done = false;
+      cover.addEventListener('transitionend', function () {
+        if (done) return;
+        done = true;
+        finish();
+      }, { once: true });
+
+      // Jaring pengaman: kalau transisi tidak pernah menyala
+      // (tab tersembunyi, transisi dibatalkan), tetap lanjut.
+      window.setTimeout(function () {
+        if (done) return;
+        done = true;
+        finish();
+      }, 1200);
+    }
+
+    return { open: open };
   })();
 
   /* =======================================================
@@ -524,7 +634,6 @@
 
   startBtn.addEventListener('click', function () {
     AUDIO.ensure();     // gesture user — di sinilah audio boleh lahir
-    goTo('cake');
     CAKE.start();
   });
 
@@ -551,5 +660,7 @@
 
   /* Tinggalin halaman -> lepas mikrofon, jangan gantung */
   window.addEventListener('pagehide', function () { CAKE.stopMic(); });
+
+  DECK.init();
 
 })();

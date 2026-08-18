@@ -8,117 +8,106 @@ Baca sebelum nulis/ubah CSS atau markup apapun.
 
 ## 1. Prinsip Utama
 
-Playful **bukan berarti alay**. Beda tipis tapi krusial:
+Buatan tangan **bukan berarti berantakan**. Beda tipis tapi krusial:
 
-| Alay (HINDARI) | Playful yang benar (PAKAI) |
+| Berantakan (HINDARI) | Buatan tangan (PAKAI) |
 |---|---|
-| Emoji ditumpuk berlebihan di tiap baris teks | Emoji dipakai sesekali, sebagai aksen bukan pengganti kata |
-| Font comic/cursive norak (Comic Sans dkk) | Font rounded modern (Baloo 2, Fredoka) — playful tapi tetap desainer punya |
-| Warna pelangi semua dipakai sekaligus | Palet terbatas, 1 warna dominan + 1-2 aksen |
-| Animasi nyala-nyala di semua elemen bersamaan | Satu momen animasi yang jadi "signature", sisanya tenang |
-| Copy lebay/bombastis ("SUPER DUPER AMAZING!!!") | Copy jujur, hangat, secukupnya |
-| Border-radius ekstrem + shadow tebal di semua card | Radius & shadow konsisten, dipakai dengan hierarki |
+| Semua elemen dimiringkan acak | Foto miring kecil dan terkontrol (≤2,5°, tiap lembar beda). Washi tape beda urusan: sengaja curam (−38°) karena tape memang ditempel menyilang |
+| Washi tape di empat sudut tiap foto | Dua sudut, dan tidak selalu sudut yang sama |
+| Tekstur kertas pekat sampai teks susah dibaca | Tekstur di opasitas 0,05 — terasa, tidak mengganggu |
+| Font tulisan tangan dipakai untuk kalimat panjang | Tulisan tangan hanya untuk 1–3 baris perasaan |
+| Angka ganti font tiap muncul | Angka mengikuti konteks kalimatnya |
+| Bayangan tebal abu-abu | Bayangan tipis bernada coklat |
 
-Aturan induk: **spend boldness di satu tempat**. Kalau warna udah berani, animasi tenang. Kalau animasi jadi signature, layout & tipografi di sekitarnya harus disiplin.
+Aturan induk: **ketidaksempurnaan dikontrol, bukan asal.** Kemiringan foto, tape, tekstur kertas — semua elemen "khas scrapbook" itu sengaja dibikin kecil dan konsisten, bukan digenerate acak tiap render. Begitu satu elemen udah jujur "berantakan" (tape miring, kertas bertekstur), elemen di sekitarnya wajib rapi: grid foto lurus, spacing dari skala yang sama, radius kecil yang konsisten di semua permukaan kertas.
 
-**Signature interaction: tepat 1 per halaman.** Bukan per section, bukan per slide. Satu halaman = satu momen yang orang inget.
+**Signature interaction: tepat 1 per halaman.** Bukan per lembar, bukan per slide. Satu halaman = satu momen yang orang inget: **tiup lilin di sampul**.
 
-Halaman ini punya beberapa slide, dan tetap **cuma satu signature: tiup lilin**. Slide lain boleh punya interaksi, tapi harus jelas lebih kecil — tap biasa, tombol, transisi. Kalau ada dua interaksi yang sama-sama minta perhatian, dua-duanya jadi lemah. Sisanya cukup micro-feedback (hover, press, fade-in) — itu bukan signature, itu sopan santun.
+Halaman ini punya tujuh layar (sampul + deck 6 lembar), dan tetap **cuma satu signature**. Lembar-lembar di deck boleh punya interaksi kecil — tap kartu keangkat dikit, titik indikator ganti warna, tombol ganti lembar — tapi harus jelas lebih kecil dari tiup lilin. Kalau ada dua interaksi yang sama-sama minta perhatian, dua-duanya jadi lemah. Sisanya cukup micro-feedback (active state, fade-in) — itu bukan signature, itu sopan santun.
 
 ---
 
-## 2. Palet Warna — Pink-dominant
+## 2. Palet Warna — Kraft/Cokelat
 
 ```css
 :root {
-  --pink-primary: #FF4D8D;  /* hero color. Fill besar, background section, dekorasi. */
-  --pink-soft:    #FFD6E5;  /* background section lembut, surface card */
-  --pink-deep:    #A81A4C;  /* SEMUA teks/ikon warna pink. Juga bg tombol kecil. */
-  --lilac:        #A78BFA;  /* satu-satunya warna dingin yang boleh. Dekoratif doang. */
-  --accent-gold:  #FFC94D;  /* aksen sekunder, dipakai SEDIKIT — badge, garis, highlight */
-  --ink:          #2B1830;  /* teks utama + focus ring. Bukan hitam pekat. */
-  --cream:        #FFF8F4;  /* background netral kalau butuh napas dari pink */
-  --white:        #FFFFFF;
+  --paper:    #F4EADA;  /* permukaan lembar (sheet), warna dasar deck */
+  --board:    #6B4A2F;  /* sampul buku (cover), background body */
+  --polaroid: #FFFFFF;  /* bingkai foto */
+  --espresso: #2E2016;  /* teks paling gelap — angka umur, penekanan di surat */
+  --cocoa:    #4A3524;  /* teks body default, di atas --paper */
+  --rust:     #8F4426;  /* aksen — nomor halaman, tanda tangan, titik indikator aktif, garis lilin */
+  --sepia:    #7A5C3E;  /* teks sekunder yang tersedia di palet, belum dipakai di markup saat ini */
+  --tape:     #D9C7A3;  /* washi tape, isian nyala lilin, fallback bingkai foto kosong */
+  --sage:     #8A9A78;  /* aksen dekoratif dingin — dipakai di partikel sobekan kertas */
 }
 ```
 
 ### Aturan kontras (WAJIB — ini bukan saran)
 
-Semua teks harus lolos WCAG AA. Pasangan yang udah diverifikasi:
+Rasio kontras terukur, dibulatkan:
 
 | Teks | di atas | Rasio | Boleh dipakai buat |
 |---|---|---|---|
-| `--ink` | `--cream` / `--white` | 15.6:1 | semua ukuran |
-| `--ink` | `--pink-soft` | 12.3:1 | semua ukuran |
-| `--pink-deep` | `--cream` / `--white` | 6.9:1 | semua ukuran |
-| `--pink-deep` | `--pink-soft` | 5.5:1 | semua ukuran |
-| `--white` | `--pink-deep` | 7.2:1 | semua ukuran — **ini tombol default** |
-| `--white` | `--pink-primary` | **3.1:1** | ⚠️ HANYA teks besar: ≥24px, atau ≥19px bold |
-| `--pink-primary` | `--cream` | **3.0:1** | ⚠️ JANGAN buat teks. Fill/dekorasi doang. |
+| `--espresso` | `--paper` | 13.21:1 | semua ukuran |
+| `--cocoa` | `--paper` | 9.65:1 | semua ukuran |
+| `--rust` | `--paper` | 5.83:1 | semua ukuran |
+| `--sepia` | `--paper` | 5.14:1 | semua ukuran |
+| `--paper` | `--board` | 6.66:1 | semua ukuran — teks di sampul |
 
 Konsekuensi praktis:
 
-- **`--pink-primary` bukan warna teks.** Titik. Dia warna isi: background section, blob dekoratif, ilustrasi, garis tebal.
-- **Tombol pakai `--pink-deep` sebagai background + teks putih.** Kalau mau tombol `--pink-primary`, teksnya wajib ≥19px bold — dan itu cuma buat CTA hero, bukan tombol biasa.
-- Headline gede di atas `--pink-primary` boleh putih (ukurannya lolos).
-- Teks di atas `--pink-soft` pakai `--pink-deep` atau `--ink`.
-
-### Aturan pakai warna
-
-- Pink adalah **hero color**, bukan aksen — boleh jadi background section penuh.
-- Gold cuma detail kecil (badge, garis, highlight). Dipakai luas → keliatan "pelangi ultah anak SD". Boleh jadi background highlight teks **asal teksnya `--ink`** (10.8:1). **Teks putih di atas gold dilarang** — 1.6:1, ga kebaca.
-- `--lilac` dekoratif murni: bentuk background, partikel, glow. Bukan teks, bukan tombol.
+- **`--tape` dan `--sage` bukan warna teks — titik.** Keduanya dekoratif doang: `--tape` jadi background washi tape, isian nyala lilin, dan fallback bingkai foto kosong; `--sage` cuma muncul di partikel sobekan kertas.
+- **`--tape` boleh jadi background di belakang teks `--espresso`** (dipakai di penekanan `<em>` pada surat) — bukan di belakang teks warna lain.
+- **`--polaroid` (putih) cuma bingkai foto**, bukan surface teks.
+- Teks di atas `--board` (sampul) wajib `--paper` — satu-satunya pasangan yang lolos kontras di sana.
+- Teks di atas `--paper` (lembar deck) pakai `--espresso`, `--cocoa`, `--rust`, atau `--sepia` — sesuai peran, bukan asal pilih yang paling gelap.
 - Butuh warna di luar daftar ini? Minta izin dulu. Jangan improvisasi.
 
 ### Dark mode
 
-**Tidak ada dark mode di project ini.** Jangan bikin `@media (prefers-color-scheme: dark)`. Halaman ini satu look, terang, pink. Selesai.
+**Tidak ada dark mode di project ini.** Jangan bikin `@media (prefers-color-scheme: dark)`. Halaman ini satu look, kertas kraft, cokelat hangat. Selesai.
 
 ---
 
 ## 3. Tipografi
 
-**Dua family kerja + satu aksen. Ga boleh lebih.**
+**Tiga family, masing-masing peran fix. Ga boleh nambah.**
 
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&family=Dancing+Script:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Caveat:wght@600&family=Special+Elite&display=swap" rel="stylesheet">
 ```
 
-- **Display/heading — Baloo 2, weight 700.** Cuma buat headline & angka besar. Jangan buat body text panjang.
-- **Body — Poppins, weight 400 (600 buat penegasan).** Ini yang bikin desain ga keliatan alay — body harus clean dan gampang dibaca.
-- **Aksen — Dancing Script, weight 600.** Font sambung. Aturan pakainya di bawah, dan ketat.
-- Load cuma weight yang kepake. Jangan tarik `wght@100..900` — itu bikin file font membengkak tanpa alasan.
+- **`--font-body` — Lora, weight 400 (600 buat penegasan).** Body text, caption, tombol, label — semua teks fungsional dan prosa.
+- **`--font-hand` — Caveat, weight 600.** Tulisan tangan. Cuma buat kalimat pendek yang sifatnya perasaan (caption foto, tanda tangan). Bukan buat teks fungsional.
+- **`--font-label` — Special Elite, weight 400.** Terlihat kayak mesin tik/stempel. Buat tanggal, nomor halaman, angka umur besar, dan label kecil (kicker sampul, status).
+- Load cuma weight yang kepake. Jangan tarik `wght@100..900`.
 - `display=swap` wajib, biar teks ga ilang pas font loading.
 
-### Aturan font sambung (Dancing Script)
+### Kebijakan angka — baca ini pelan-pelan
 
-Font sambung itu bumbu, bukan bahan utama. Dipakai kebanyakan → langsung jatuh ke kategori alay di §1.
+Angka **ikut konteks kalimatnya, bukan dipilih per-angka, dan ga pernah ganti font di tengah kalimat**:
 
-- **Maks 2 baris per halaman.** Bukan per slide — per halaman. Sekarang jatahnya: 1 di slide kue, 1 di kartu. Jatahnya habis.
-- **Minimal 24px.** Di bawah itu sambungan hurufnya jadi bubur di layar HP.
-- **Jangan `text-transform: uppercase`.** Huruf kapital mutusin sambungan — itu ngerusak satu-satunya alasan font ini dipakai.
-- **Jangan `letter-spacing`.** Alasannya sama: itu misahin huruf yang harusnya nyambung.
-- **Maks ~8 kata per baris.** Lebih dari itu capek dibaca.
-- **Cuma di atas `--white` atau `--cream`, warna `--ink` atau `--pink-deep`.** Stroke-nya tipis — di atas pink jadi susah kebaca walaupun rasio angkanya lolos.
-- `line-height` minimal `1.4` — huruf sambung punya ekor atas-bawah yang gampang tabrakan.
-- **Jangan buat teks fungsional.** Tombol, label, nav, instruksi — semua pakai Poppins. Font sambung cuma buat kalimat yang sifatnya perasaan.
+- Tanggal (`.stamp-date`), nomor halaman (`.page-no`), dan angka umur besar (`.age-display`) pakai **Special Elite** — karena posisinya sebagai elemen "distempel", bukan bagian dari kalimat.
+- Angka yang muncul **di dalam prosa** (misal di baris surat) ikut font prosa itu, yaitu **Lora** — ga pindah ke Special Elite atau Caveat cuma karena dia angka.
+- **Special Elite ga pernah di bawah 14px** (`--fs-label`), dan **cuma buat string pendek** (tanggal, nomor, kicker) — ga pernah buat kalimat penuh.
+- **Caveat ga pernah di bawah 18px** (`--fs-hand` minimum), **maks 3 baris per lembar**, ga pernah `uppercase`, ga pernah `letter-spacing`.
+- `font-variant-numeric: tabular-nums` di tanggal dan nomor halaman (biar digit sejajar rapi, kesan stempel). `font-variant-numeric: lining-nums` di prosa surat (`.letter-line`) — angka menyatu tinggi sama huruf kapital di sekitarnya, ga naik-turun kayak old-style figures.
 
 ### Skala tipografi
 
-Fluid pakai `clamp()`, mobile-first. Baseline 375px → desktop 1440px.
-
 ```css
---fs-hero:  clamp(2.5rem, 8vw, 4rem);      /* 40 → 64px */
---fs-h1:    clamp(2rem, 6vw, 2.75rem);     /* 32 → 44px */
---fs-h2:    clamp(1.5rem, 4vw, 2rem);      /* 24 → 32px */
---fs-lead:  clamp(1.125rem, 2.5vw, 1.25rem); /* 18 → 20px */
---fs-body:  1rem;                           /* 16px — jangan lebih kecil buat body */
---fs-small: 0.875rem;                       /* 14px — caption/label doang */
+--fs-display: clamp(3.5rem, 14vw, 4.5rem);  /* angka umur, Special Elite */
+--fs-h1:      clamp(1.75rem, 5.5vw, 2.25rem);
+--fs-h2:      clamp(1.375rem, 4vw, 1.625rem);
+--fs-body:    1rem;                          /* 16px */
+--fs-hand:    clamp(1.125rem, 4.5vw, 1.375rem); /* min 18px — Caveat */
+--fs-label:   0.875rem;                      /* 14px — plafon bawah Special Elite */
 ```
 
-Line-height: heading `1.15`, body `1.6`. Body text max-width `60ch` — kalimat kepanjangan susah dibaca.
+Body line-height `1.6`. Body text max-width `60ch` — kalimat kepanjangan susah dibaca.
 
 ---
 
@@ -127,32 +116,30 @@ Line-height: heading `1.15`, body `1.6`. Body text max-width `60ch` — kalimat 
 Base 4px. Cuma pakai angka dari skala ini — jangan `margin: 27px`.
 
 ```css
---sp-1: 4px;   --sp-2: 8px;   --sp-3: 12px;  --sp-4: 16px;
---sp-5: 24px;  --sp-6: 32px;  --sp-7: 48px;  --sp-8: 64px;  --sp-9: 96px;
+--sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+--sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px; --sp-9: 96px;
 ```
-
-Padding section: `var(--sp-8)` di mobile, `var(--sp-9)` di desktop.
 
 ```css
---r-sm:   8px;    /* badge, input, tombol kecil */
---r-md:   16px;   /* tombol besar */
---r-lg:   24px;   /* card */
---r-full: 999px;  /* pill / avatar — dipakai sengaja, bukan asal */
+--r-paper: 2px;   /* permukaan kertas: tombol, lembar, kue */
+--r-cover: 3px;   /* sampul buku */
+--r-photo: 0;     /* foto polaroid — kotak tegas, bukan card membulat */
+--r-pill:  999px; /* HANYA kontrol bulat: titik indikator, tombol ikon suara/panah. Bukan permukaan kertas. */
 ```
 
-Jangan campur radius kotak dan bulat penuh secara acak dalam satu kelompok elemen.
+Kertas scrapbook itu nyaris kotak. **Semua permukaan kertas ≤3px radius** — kalau ada card baru yang butuh sudut membulat gede, itu tanda dia bukan permukaan kertas dan harus dipikir ulang, bukan asal pakai `--r-lg` yang ga ada di sistem ini.
 
 ### Shadow
 
-Soft, warna-tinted (bukan abu-abu generik) biar nyatu sama tema:
+Bayangan warna-tinted (coklat hangat), bukan abu-abu generik, biar nyatu sama tema:
 
 ```css
---shadow-sm: 0 2px 8px rgba(168, 26, 76, 0.08);
---shadow-md: 0 8px 20px rgba(255, 77, 141, 0.15);
---shadow-lg: 0 12px 30px rgba(255, 77, 141, 0.18);
+--sh-sheet: 0 6px 18px rgba(46, 32, 22, .18);  /* lembar & sampul, diam */
+--sh-photo: 0 3px 10px rgba(46, 32, 22, .26);  /* foto, tombol, elemen kecil */
+--sh-lift:  0 12px 26px rgba(46, 32, 22, .24); /* state terangkat — active/press */
 ```
 
-Jangan `rgba(0,0,0,0.5)` — berat dan bikin kotor.
+Semuanya pakai basis rgba yang sama, `46, 32, 22` (espresso), cuma beda opacity/spread sesuai seberapa "terangkat" elemennya. Jangan `rgba(0,0,0,0.5)` — berat dan bikin kotor.
 
 ---
 
@@ -162,20 +149,20 @@ Jangan `rgba(0,0,0,0.5)` — berat dan bikin kotor.
 
 ```css
 --dur-micro:  150ms;  /* hover, press, toggle kecil */
---dur-base:   300ms;  /* transisi elemen, fade-in, slide */
---dur-signature: 800ms; /* momen utama halaman */
+--dur-base:   300ms;  /* transisi elemen, fade-in */
+--dur-cover:  800ms;  /* sampul kebuka, serah terima ke deck — momen utama halaman */
 ```
 
-Kalau ada animasi lebih dari 1 detik yang bukan signature — itu kelamaan, potong.
+Kalau ada animasi lebih dari 1 detik yang bukan buka-sampul — itu kelamaan, potong.
 
 ### Easing
 
 ```css
---ease-bounce: cubic-bezier(.34, 1.56, .64, 1);  /* interaksi utama: klik, drag, reveal */
---ease-soft:   cubic-bezier(.25, .8, .35, 1);     /* ambient, background, loop kecil */
+--ease-paper: cubic-bezier(.22, .8, .3, 1);   /* buka sampul, fade, transisi tenang */
+--ease-lift:  cubic-bezier(.34, 1.3, .64, 1); /* micro-feedback: tombol ditekan, kartu keangkat */
 ```
 
-Jangan bouncy semua — kalau semua elemen mantul-mantul jadi norak. Bouncy itu buat momen yang user picu sendiri.
+Easing memantul-mantul lama **sengaja dibuang dari sistem ini**. Kertas ga mantul — begitu ditekan atau diangkat dia berhenti mulus, ga ada overshoot yang niru karet/plastik. `--ease-lift` punya sedikit overshoot terkontrol buat micro-feedback, tapi jauh lebih halus dari easing memantul versi lama.
 
 ### Reduced motion — wajib di setiap animasi baru
 
@@ -190,9 +177,9 @@ Jangan bouncy semua — kalau semua elemen mantul-mantul jadi norak. Bouncy itu 
 }
 ```
 
-Blok global ini bukan pengganti berpikir: efek canvas (confetti) **di-skip total**, bukan cuma dipercepat — cek `matchMedia('(prefers-reduced-motion: reduce)').matches` di JS sebelum jalanin.
+Blok global ini bukan pengganti berpikir: efek canvas (sobekan kertas) **di-skip total**, bukan cuma dipercepat — cek `matchMedia('(prefers-reduced-motion: reduce)').matches` di JS sebelum jalanin.
 
-### Budget efek canvas (confetti dkk)
+### Budget efek canvas (sobekan kertas dkk)
 
 Library dilarang, jadi efek dibikin manual. Ceiling biar HP ga ngos-ngosan:
 
@@ -211,15 +198,24 @@ Library dilarang, jadi efek dibikin manual. Ceiling biar HP ga ngos-ngosan:
 - **Focus ring wajib kelihatan** di semua elemen interaktif. Jangan `outline: none` tanpa pengganti.
   ```css
   :focus-visible {
-    outline: 3px solid var(--ink);
+    outline: 3px solid var(--paper);
     outline-offset: 2px;
-    border-radius: var(--r-sm);
+    border-radius: var(--r-paper);
   }
   ```
-  `--ink` dipilih karena lolos kontras di atas cream, pink-soft, **dan** pink-primary.
+  `--paper` dipilih karena lolos kontras di atas `--board` (sampul) **dan** di atas `--paper`/lembar deck.
 - Elemen yang bisa diklik harus `<button>` atau `<a>`, bukan `<div onclick>` — biar keyboard & screen reader jalan.
-- Gambar dekoratif: `alt=""`. Gambar bermakna: alt yang beneran deskriptif.
+- Gambar dekoratif: `alt=""`. Gambar bermakna (foto di polaroid): alt yang beneran deskriptif, ditulis manusia — bukan placeholder.
 - Emoji yang membawa arti kasih `role="img"` + `aria-label`. Emoji dekoratif kasih `aria-hidden="true"`.
+
+### Struktur & navigasi deck
+
+Halaman ini punya **tujuh layar**: sampul (kue + 16 lilin), lalu deck geser horizontal berisi **enam lembar** — lima lembar foto, ditutup satu lembar surat. Foto dibagi 2/2/2/1/1 lembar di lembar 1–5, total delapan slot foto.
+
+- **Navigasi deck pakai `scroll-snap` CSS native** (`scroll-snap-type: x mandatory` di `.deck`, `scroll-snap-align: center` di `.sheet`) — **bukan** pointer-drag manual bikinan sendiri. Tombol panah dan titik indikator manggil `scrollTo`/`scrollIntoView`, browser yang urus snapping-nya.
+- **`overflow-y: hidden` di `.deck` itu load-bearing, bukan kosmetik.** Kalau satu lembar kontennya kelebihan tinggi, dia bakal kepotong dan keliatan cacat — bukan diam-diam jadi bisa di-scroll vertikal dan nyembunyiin masalahnya. Setiap lembar **wajib muat dalam tinggi konten 619px** di viewport 375×667.
+- **Titik indikator (`.dots`) harus sinkron dengan lembar yang lagi keliatan** — `aria-current="true"` pindah ke titik yang sesuai index lembar aktif, bukan ketinggalan pas user swipe cepat.
+- Aturan `[hidden] { display: none !important; }` di global CSS **itu load-bearing juga**: deklarasi `display` dari component rule (misal `.deck { display: flex; }`) mengalahkan aturan `[hidden]` bawaan browser diam-diam, tanpa error. Kalau ga ada `!important` di aturan global ini, elemen yang dikasih atribut `hidden` bisa tetap keliatan.
 
 ---
 
@@ -250,22 +246,26 @@ Sama kayak efek visual: **disintesis manual pakai Web Audio API**, bukan file MP
 Dua-duanya: `sine` fundamental + harmonik, envelope exponential decay, lowpass biar ga cempreng.
 
 ```
-Music box (celesta)          Kalimba
+Kalimba (default)            Music box (celesta, preset alternatif)
   partial: 1.0  gain 1.00      partial: 1.0  gain 1.00
-  partial: 2.0  gain 0.25      partial: 2.0  gain 0.18
-  partial: 3.01 gain 0.08      partial: 4.7  gain 0.05
-  attack  0.005s               attack  0.008s
-  decay   1.4s                 decay   0.9s
-  lowpass 4000Hz               lowpass 2600Hz
+  partial: 2.0  gain 0.18      partial: 2.0  gain 0.25
+  partial: 4.7  gain 0.05      partial: 3.01 gain 0.08
+  attack  0.008s                attack  0.005s
+  decay   0.9s                  decay   1.4s
+  lowpass 2600Hz                lowpass 4000Hz
 ```
 
-Music box = lebih berdenting & nostalgik. Kalimba = lebih hangat & bulat. Pilih satu, jangan campur dalam satu halaman.
+Kalimba dipakai sebagai default karena timbre-nya kayu, lebih menyatu sama tema kraft. Music box tetap ada di kode sebagai preset alternatif (`INSTRUMENTS.musicbox`) — lebih berdenting & nostalgik, tinggal ganti `CURRENT` kalau suatu saat mau dipakai. Pilih satu, jangan campur dalam satu halaman.
 
 ### Melodi
 
 "Happy Birthday to You" — **public domain sejak 2016**, aman dipakai. Tempo ~100 BPM, rasa 3/4.
 
 Ga usah pakai reverb convolver (butuh file impulse = asset eksternal). Kesan ruang cukup pakai feedback delay pendek (`delayTime` 0.12s, feedback 0.25) — murah, dan cukup.
+
+### Partikel perayaan
+
+Efek visual pas lilin mati adalah **sobekan kertas**, bukan partikel foil berkilau — canvas dengan class `.scraps`, warnanya diambil langsung dari token palet (`--paper`, `--tape`, `--board`, `--rust`, `--sage`). Bentuknya persegi panjang kecil yang mutar pelan, konsisten sama tema kertas & scrapbook. Budget performa dan aturan reduced-motion-nya sama kayak efek canvas manapun — lihat §5.
 
 ### Input mikrofon (deteksi tiupan)
 
@@ -296,23 +296,31 @@ Ini fitur paling gampang gagal di halaman ini. Perlakukan sebagai **bonus, bukan
 ## 9. Checklist sebelum lapor selesai
 
 Warna & tipografi:
-- [ ] Warna dominan halaman adalah pink, bukan campur rata semua warna
-- [ ] `--pink-primary` tidak dipakai sebagai warna teks di manapun
-- [ ] Semua teks lolos kontras sesuai tabel di §2 (cek yang di atas background pink)
-- [ ] Font display cuma di heading, bukan di body
-- [ ] Cuma 2 font family, weight yang di-load cuma yang kepake
+- [ ] Warna dominan halaman adalah kraft/cokelat dari palet §2, bukan campur rata semua warna
+- [ ] `--tape` dan `--sage` tidak dipakai sebagai warna teks di manapun
+- [ ] Semua teks lolos kontras sesuai tabel di §2
+- [ ] Radius seluruh permukaan kertas ≤3px
+- [ ] Cuma 3 font family, weight yang di-load cuma yang kepake
+
+Angka:
+- [ ] Special Elite tidak pernah di bawah 14px dan tidak pernah untuk kalimat
+- [ ] Caveat tidak pernah di bawah 18px, maksimum 3 baris per lembar
+- [ ] Tidak ada pergantian font angka di tengah kalimat
 
 Layout & motion:
 - [ ] Semua spacing dari skala `--sp-*`, ga ada angka ngasal
-- [ ] Tepat 1 signature interaction di halaman ini
+- [ ] Tepat 1 signature interaction di halaman ini (tiup lilin)
 - [ ] `prefers-reduced-motion` dihormati — termasuk canvas di-skip total, bukan cuma dipercepat
-- [ ] Ga ada animasi >1 detik selain signature
+- [ ] Ga ada animasi >1 detik selain buka-sampul
 
 Fungsional:
 - [ ] Dicek di 375px: ga ada horizontal scroll, ga ada teks kepotong
+- [ ] Setiap lembar terukur ≤619px tinggi di viewport 375×667
+- [ ] Titik indikator sinkron dengan lembar yang sedang tampil
 - [ ] Interaksi utama dites di touch (atau minimal pakai Pointer Events, bukan mouse-only)
 - [ ] Semua elemen interaktif punya focus ring yang kelihatan
 - [ ] Bisa di-tab dari atas ke bawah tanpa nyangkut
+- [ ] Setiap foto punya alt yang ditulis manusia, bukan penanda `[GANTI-ALT]`
 
 Audio:
 - [ ] Ga ada suara sebelum user interaksi (dites: reload → diem)
@@ -327,11 +335,6 @@ Mikrofon:
 - [ ] `track.stop()` kepanggil — indikator rekam di HP mati
 - [ ] Ga ada musik jalan selama fase deteksi
 - [ ] Ada kalimat di layar yang bilang audionya ga dikirim ke mana-mana
-
-Font sambung:
-- [ ] Maks 2 baris di seluruh halaman
-- [ ] Semua ≥24px, ga ada uppercase, ga ada letter-spacing
-- [ ] Ga dipakai di tombol/label/instruksi
 
 Copy:
 - [ ] Dibaca ulang — ga ada kalimat lebay, emoji ga bertumpuk
