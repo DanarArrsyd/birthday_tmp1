@@ -446,20 +446,10 @@ body {
 .washi-tl { top: -8px; left: -12px; transform: rotate(-38deg); }
 .washi-tr { top: -8px; right: -12px; transform: rotate(38deg); }
 
-/* Label pengirim. Special Elite, seperti nama yang dicap di sudut arsip. */
-.from {
-  margin: 0 0 var(--sp-5);
-  font-family: var(--font-label);
-  font-size: var(--fs-label);
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--rust);
-}
-
 /* Badan pesan. Lora, karena ini prosa yang dibaca utuh — bukan tempelan.
    Angka di dalamnya ikut font ini, tidak pernah pindah ke Special Elite. */
 .note {
-  margin: 0 auto var(--sp-5);
+  margin: 0 auto var(--sp-4);
   max-width: 32ch;
   font-variant-numeric: lining-nums;
   color: var(--cocoa);

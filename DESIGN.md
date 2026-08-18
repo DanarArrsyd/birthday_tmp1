@@ -207,7 +207,7 @@ Library dilarang, jadi efek dibikin manual. Ceiling biar HP ga ngos-ngosan:
 
 ### Struktur & navigasi deck
 
-Halaman ini punya **lima layar**: sampul (kue + 16 lilin), lalu deck geser horizontal berisi **empat lembar** — satu lembar per pengirim (Ayah, Ibu, Kakak), ditutup satu lembar surat bersama. Tanpa foto: tiap lembar isinya label pengirim, satu paragraf pesan, dan satu baris tulisan tangan.
+Halaman ini punya **lima layar**: sampul (kue + 16 lilin), lalu deck geser horizontal berisi **empat lembar** — satu lembar per pengirim (Ayah, Ibu, Kakak), ditutup satu lembar surat bersama. Tanpa foto: tiap lembar isinya pesan dalam beberapa paragraf, ditutup tanda tangan tulisan tangan. Label pengirim di atas lembar sengaja tidak ada — tiap pesan sudah menyebut penulisnya di kalimat pertama, jadi label itu cuma mengulang.
 
 - **Navigasi deck pakai `scroll-snap` CSS native** (`scroll-snap-type: x mandatory` di `.deck`, `scroll-snap-align: center` di `.sheet`) — **bukan** pointer-drag manual bikinan sendiri. Tombol panah dan titik indikator manggil `scrollTo`/`scrollIntoView`, browser yang urus snapping-nya.
 - **`overflow-y: hidden` di `.deck` itu load-bearing, bukan kosmetik.** Kalau satu lembar kontennya kelebihan tinggi, dia bakal kepotong dan keliatan cacat — bukan diam-diam jadi bisa di-scroll vertikal dan nyembunyiin masalahnya. Setiap lembar **wajib muat dalam tinggi konten 619px** di viewport 375×667.
