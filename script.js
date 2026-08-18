@@ -538,6 +538,10 @@
     function goTo(i) {
       if (i < 0 || i >= sheets.length) return;
       deck.scrollTo({ left: sheets[i].offsetLeft, behavior: 'smooth' });
+      // Jangan menunggu IntersectionObserver: callback-nya baru datang setelah
+      // animasi scroll selesai, jadi ketukan cepat berikutnya akan menghitung
+      // dari indeks yang basi dan menembak lembar yang sama.
+      setActive(i);
     }
 
     function setActive(i) {
