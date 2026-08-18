@@ -513,9 +513,9 @@ body {
    jadi tanda tangannya kelihatan nyenggol tombol walau tidak overlap. */
 .hand-cap.sign { margin: var(--sp-5) 0 var(--sp-5); color: var(--rust); }
 
-/* ---------- Confetti canvas (dibuat & dihapus lewat JS) ---------- */
+/* ---------- Canvas sobekan kertas (dibuat & dihapus lewat JS) ---------- */
 
-.confetti { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
+.scraps { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
 
 /* ---------- Reduced motion — DESIGN.md §5 ---------- */
 

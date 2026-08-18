@@ -1,5 +1,5 @@
 /* =========================================================
-   Buat Dinar — slide, audio, deteksi tiupan, confetti
+   Buat Dinar — sampul, deck, audio, deteksi tiupan, partikel kertas
    Vanilla, tanpa dependency. Referensi: DESIGN.md §5, §6, §8
    ========================================================= */
 
@@ -180,7 +180,7 @@
       if (reduceMotion.matches) return;  // skip total, bukan dipercepat
 
       var canvas = document.createElement('canvas');
-      canvas.className = 'confetti';
+      canvas.className = 'scraps';
       canvas.setAttribute('aria-hidden', 'true');
       document.body.appendChild(canvas);
 
@@ -209,7 +209,7 @@
           w: 6 + Math.random() * 9,
           h: 3 + Math.random() * 5,
           rot: Math.random() * Math.PI,
-          vr: (Math.random() - 0.5) * 4,   // lebih lambat dari confetti: kertas berat
+          vr: (Math.random() - 0.5) * 4,   // kertas lebih berat dari foil: putarannya lebih lambat
           color: COLORS[(Math.random() * COLORS.length) | 0]
         });
       }
