@@ -508,7 +508,10 @@ body {
   color: var(--espresso);
 }
 
-.hand-cap.sign { margin-top: var(--sp-5); color: var(--rust); }
+/* Butuh margin bawah eksplisit: kotak baris Caveat berhenti tepat di tepi
+   atas tombol replay, sementara ekor hurufnya keluar dari kotak itu —
+   jadi tanda tangannya kelihatan nyenggol tombol walau tidak overlap. */
+.hand-cap.sign { margin: var(--sp-5) 0 var(--sp-5); color: var(--rust); }
 
 /* ---------- Confetti canvas (dibuat & dihapus lewat JS) ---------- */
 
