@@ -268,22 +268,9 @@
   var replayBtn = document.getElementById('replay');
   var startBtn = document.getElementById('startBtn');
 
-  function goTo(name) { document.body.dataset.slide = name; }
-
   function lockReplay(ms) {
     replayBtn.disabled = true;
     window.setTimeout(function () { replayBtn.disabled = false; }, ms);
-  }
-
-  function openCard() {
-    goTo('card');
-    burstConfetti();
-    playMelody();
-    lockReplay(melodyDuration() * 1000);
-    // Fokus ikut pindah — slide sebelumnya di-display:none, jangan
-    // tinggalin fokus di body. Sasarannya kartu, bukan tombol replay:
-    // replay lagi disabled pas ini jalan.
-    window.setTimeout(function () { card.focus(); }, 100);
   }
 
   /* =======================================================
@@ -454,8 +441,8 @@
       stopMic();
       setStatus('done');
       manualBtn.hidden = true;
-      // Kasih jeda buat asapnya naik dulu, baru pindah slide
-      window.setTimeout(openCard, reduceMotion.matches ? 200 : 900);
+      // Jeda supaya asap sempat naik, baru sampul dibuka
+      window.setTimeout(COVER.open, reduceMotion.matches ? 200 : 900);
     }
 
     function manualBlow() {
@@ -594,12 +581,61 @@
   })();
 
   /* =======================================================
+     COVER — sampul terbuka, lalu serahkan ke DECK.
+     Rantai satu arah: CAKE -> COVER -> DECK. COVER tidak
+     pernah memanggil balik ke CAKE.
+     ======================================================= */
+
+  var COVER = (function () {
+    var stage = document.getElementById('coverStage');
+    var cover = document.getElementById('cover');
+    var opened = false;
+
+    function finish() {
+      stage.hidden = true;     // buang lapisan komposit yang sudah tak terpakai
+      DECK.reveal();
+
+      // Perayaan pindah ke sini. Sebelumnya dipicu dari fungsi lama
+      // yang sudah dihapus — tanpa dua baris ini lagu dan partikel
+      // hilang tanpa suara.
+      burstConfetti();
+      playMelody();
+      lockReplay(melodyDuration() * 1000);
+    }
+
+    function open() {
+      if (opened) return;
+      opened = true;
+
+      cover.classList.add('is-open');
+
+      // transitionend tetap menyala di mode reduced-motion karena
+      // durasinya jadi 0.01ms, bukan nol.
+      var done = false;
+      cover.addEventListener('transitionend', function () {
+        if (done) return;
+        done = true;
+        finish();
+      }, { once: true });
+
+      // Jaring pengaman: kalau transisi tidak pernah menyala
+      // (tab tersembunyi, transisi dibatalkan), tetap lanjut.
+      window.setTimeout(function () {
+        if (done) return;
+        done = true;
+        finish();
+      }, 1200);
+    }
+
+    return { open: open };
+  })();
+
+  /* =======================================================
      Tombol
      ======================================================= */
 
   startBtn.addEventListener('click', function () {
     AUDIO.ensure();     // gesture user — di sinilah audio boleh lahir
-    goTo('cake');
     CAKE.start();
   });
 

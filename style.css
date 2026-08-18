@@ -448,3 +448,12 @@ body {
   .flame { animation: none; opacity: 1; transform: translateX(-50%); }
   .candle.is-out::after { animation: none; opacity: 0; }
 }
+
+/* ---------- Reduced motion — sampul, ditaruh sesudah blok global
+   di atas biar menang urutan ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .cover { transition: opacity 200ms linear; }
+  .cover.is-open { transform: none; opacity: 0; }
+  .sheet:active .paper { transform: none; }
+}
