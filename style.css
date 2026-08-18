@@ -335,6 +335,82 @@ body {
   opacity: .34;
 }
 
+/* ---------- Deck: geser horizontal (scroll-snap native) ---------- */
+
+.deck {
+  display: flex;
+  height: 100svh;
+  overflow-x: auto;
+  overflow-y: hidden;          /* lembar yang kelebihan tinggi jadi cacat terlihat */
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.deck::-webkit-scrollbar { display: none; }
+
+.sheet {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  display: grid;
+  place-items: center;
+  padding: var(--sp-5);
+}
+
+/* Fokus programatik pas DECK.reveal() pindahin fokus — jangan gambar ring di sini */
+.sheet:focus { outline: none; }
+
+.paper {
+  width: 100%;
+  max-width: 21rem;
+  padding: var(--sp-5) var(--sp-4);
+  border-radius: var(--r-paper);
+  background-color: var(--paper);
+  background-image: var(--paper-grain);
+  box-shadow: var(--sh-sheet);
+  position: relative;
+  text-align: center;
+  transition: transform var(--dur-micro) var(--ease-lift),
+              box-shadow var(--dur-micro) var(--ease-lift);
+}
+
+.sheet:active .paper { transform: translateY(-2px); box-shadow: var(--sh-lift); }
+
+.deck-nav {
+  position: fixed;
+  left: 0; right: 0; bottom: var(--sp-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  z-index: 3;
+}
+
+.arrow {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border: 0; border-radius: var(--r-pill);
+  background: var(--paper);
+  color: var(--cocoa);
+  font-size: 1.5rem; line-height: 1;
+  box-shadow: var(--sh-photo);
+  cursor: pointer;
+}
+
+.arrow[disabled] { opacity: .4; cursor: default; }
+
+.dots { display: flex; gap: var(--sp-2); }
+
+.dots button {
+  width: 8px; height: 8px; padding: 0;
+  border: 0; border-radius: var(--r-pill);
+  background: var(--paper);
+  opacity: .5;
+  cursor: pointer;
+}
+
+.dots button[aria-current="true"] { background: var(--rust); opacity: 1; }
+
 /* ---------- Slide 3: kartu ---------- */
 
 /* Fokus programatik pas kartu kebuka — jangan gambar ring di sini */

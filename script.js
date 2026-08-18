@@ -520,6 +520,76 @@
   })();
 
   /* =======================================================
+     DECK — geser horizontal berbasis scroll-snap native.
+     Drag manual sengaja ditolak: momentum harus disimulasi,
+     keyboard mati, dan di iOS bentrok sama gestur back.
+     ======================================================= */
+
+  var DECK = (function () {
+    var deck = document.getElementById('deck');
+    var nav = document.getElementById('deckNav');
+    var dotsWrap = document.getElementById('dots');
+    var prevBtn = document.getElementById('prevBtn');
+    var nextBtn = document.getElementById('nextBtn');
+    var sheets = [];
+    var dots = [];
+    var active = 0;
+
+    function goTo(i) {
+      if (i < 0 || i >= sheets.length) return;
+      deck.scrollTo({ left: sheets[i].offsetLeft, behavior: 'smooth' });
+    }
+
+    function setActive(i) {
+      active = i;
+      for (var d = 0; d < dots.length; d++) {
+        dots[d].setAttribute('aria-current', d === i ? 'true' : 'false');
+      }
+      prevBtn.disabled = (i === 0);
+      nextBtn.disabled = (i === sheets.length - 1);
+    }
+
+    function init() {
+      sheets = Array.prototype.slice.call(deck.querySelectorAll('.sheet'));
+
+      for (var i = 0; i < sheets.length; i++) {
+        (function (idx) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('aria-label', 'Ke lembar ' + (idx + 1));
+          b.addEventListener('click', function () { goTo(idx); });
+          dotsWrap.appendChild(b);
+          dots.push(b);
+        })(i);
+      }
+
+      // IntersectionObserver, bukan event scroll: tidak perlu debounce,
+      // dan tidak ikut jalan tiap frame saat momentum masih berjalan.
+      var io = new IntersectionObserver(function (entries) {
+        for (var e = 0; e < entries.length; e++) {
+          if (entries[e].isIntersecting) setActive(sheets.indexOf(entries[e].target));
+        }
+      }, { root: deck, threshold: 0.6 });
+
+      for (var s = 0; s < sheets.length; s++) io.observe(sheets[s]);
+
+      prevBtn.addEventListener('click', function () { goTo(active - 1); });
+      nextBtn.addEventListener('click', function () { goTo(active + 1); });
+
+      setActive(0);
+    }
+
+    function reveal() {
+      deck.hidden = false;
+      nav.hidden = false;
+      setActive(0);
+      sheets[0].focus();
+    }
+
+    return { init: init, reveal: reveal, goTo: goTo };
+  })();
+
+  /* =======================================================
      Tombol
      ======================================================= */
 
@@ -552,5 +622,7 @@
 
   /* Tinggalin halaman -> lepas mikrofon, jangan gantung */
   window.addEventListener('pagehide', function () { CAKE.stopMic(); });
+
+  DECK.init();
 
 })();
