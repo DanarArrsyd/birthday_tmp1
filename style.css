@@ -453,7 +453,11 @@ body {
    di atas biar menang urutan ---------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .cover { transition: opacity 200ms linear; }
+  /* Cuma buang rotasinya. Durasi TIDAK diatur di sini: aturan global
+     di atas memakai `transition-duration: 0.01ms !important`, dan
+     !important diputus sebelum spesifisitas — jadi angka durasi
+     apa pun di sini tidak akan pernah berlaku. */
+  .cover { transition-property: opacity; }
   .cover.is-open { transform: none; opacity: 0; }
   .sheet:active .paper { transform: none; }
 }
