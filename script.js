@@ -264,7 +264,6 @@
      SLIDE
      ======================================================= */
 
-  var card = document.getElementById('card');
   var replayBtn = document.getElementById('replay');
   var startBtn = document.getElementById('startBtn');
 

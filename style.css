@@ -417,19 +417,98 @@ body {
 
 .dots button[aria-current="true"] { background: var(--rust); opacity: 1; }
 
-/* ---------- Slide 3: kartu ---------- */
+/* ---------- Lembar isi: washi tape, polaroid, caption, label ---------- */
 
-/* Fokus programatik pas kartu kebuka — jangan gambar ring di sini */
-.card:focus { outline: none; }
+.washi {
+  position: absolute;
+  width: 62px; height: 20px;
+  background: var(--tape);
+  opacity: .9;
+}
 
-/* Penanda copy sementara — hapus blok ini kalau semua GANTI udah diisi */
-.card-line em {
+/* Dua sudut saja. Empat sudut bikin kaku, bukan scrapbook. */
+.washi-tl { top: -8px; left: -12px; transform: rotate(-38deg); }
+.washi-br { bottom: -8px; right: -12px; transform: rotate(-38deg); }
+
+.polaroid {
+  margin: 0;
+  padding: var(--sp-2) var(--sp-2) var(--sp-4);
+  background: var(--polaroid);
+  border-radius: var(--r-photo);
+  box-shadow: var(--sh-photo);
+  transform: rotate(-1.5deg);
+}
+
+.shot {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--tape);   /* terlihat sebagai bingkai kosong kalau foto gagal */
+  border-radius: var(--r-photo);
+}
+
+.stack { position: relative; padding-bottom: var(--sp-5); }
+.polaroid-a { transform: rotate(2deg) translateX(-6%); width: 62%; }
+.polaroid-b { transform: rotate(-2.5deg) translateX(12%); width: 62%; margin-top: -18%; }
+
+.hand-cap {
+  margin: var(--sp-4) 0 0;
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: var(--fs-hand);
+  line-height: 1.4;
+  color: var(--cocoa);
+}
+
+.stamp-date {
+  margin: var(--sp-2) 0 0;
+  font-family: var(--font-label);
+  font-size: var(--fs-label);
+  letter-spacing: .06em;
+  font-variant-numeric: tabular-nums;
+  color: var(--cocoa);
+}
+
+.page-no {
+  position: absolute;
+  right: var(--sp-3); bottom: var(--sp-2);
+  font-family: var(--font-label);
+  font-size: var(--fs-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--rust);
+}
+
+/* Angka umur — Special Elite, karena terbaca sebagai angka distempel.
+   Caveat pecah di ukuran ini; Lora terbaca netral seperti nomor buku teks. */
+.age-display {
+  margin: var(--sp-2) 0 var(--sp-5);
+  font-family: var(--font-label);
+  font-size: var(--fs-display);
+  letter-spacing: .04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--espresso);
+}
+
+/* Angka di dalam kalimat ikut Lora — tidak pernah ganti font di tengah kalimat */
+.letter-line {
+  margin: 0 auto var(--sp-4);
+  max-width: 34ch;
+  font-variant-numeric: lining-nums;
+  color: var(--cocoa);
+}
+
+.letter-line em {
   font-style: normal;
   padding: 0 var(--sp-1);
-  border-radius: var(--r-sm);
-  background: var(--accent-gold);
-  color: var(--ink);
+  border-radius: var(--r-paper);
+  background: var(--tape);
+  color: var(--espresso);
 }
+
+.hand-cap.sign { margin-top: var(--sp-5); color: var(--rust); }
 
 /* ---------- Confetti canvas (dibuat & dihapus lewat JS) ---------- */
 
