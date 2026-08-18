@@ -39,7 +39,7 @@
 **Foto lo TIDAK akan masuk ke GitHub sampai lo nggak mau.** Kenapa? Repo ini sekarang publik, dan foto pribadi seharusnya nggak di-share ke internet tanpa lo mau.
 
 Aturan blokir di `.gitignore` akan:
-- ✅ Membuat file `.jpg` dan `.jpeg` di folder ini **tidak tercatat** di git
+- ✅ Membuat **semua file** di folder ini tidak tercatat di git — apa pun formatnya (`.jpg`, `.png`, `.heic`, `.webp`)
 - ✅ Foto tetap bisa ditampilkan di browser lo saat buka halaman lokal
 - ❌ **Jadi foto nggak bisa di-push ke GitHub** sampai lo buka blokir itu
 
@@ -51,7 +51,7 @@ Bukalah blokir **SETELAH** lo:
 3. Yakin hanya orang yang lo mau yang bisa akses
 
 Setelah itu:
-- Buka `.gitignore` dan hapus dua baris yang bilang "Foto dilarang masuk repo publik"
+- Buka `.gitignore` dan hapus blok yang bilang "Foto dilarang masuk repo publik"
 - Lakukan `git add` ke foto dan `git commit` seperti biasa
 - Sekarang foto bisa di-push ke GitHub privat dengan aman
 
