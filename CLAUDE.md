@@ -4,13 +4,15 @@ Instruksi kerja untuk Claude Code di project ini. File ini ngatur **proses & tek
 
 ## Tentang project
 
-Website sederhana (HTML/CSS/JS vanilla, tanpa framework/build tool) — halaman ucapan interaktif dengan tema playful pink. Ringan, tanpa dependency berat.
+Website sederhana (HTML/CSS/JS vanilla, tanpa framework/build tool) — scrapbook
+ulang tahun: sampul berisi kue yang ditiup, lalu lima lembar foto yang digeser
+horizontal, ditutup surat. Ringan, tanpa dependency berat.
 
 Target: **mobile-first**, baseline 375px, browser modern (Chrome/Safari/Firefox terbaru). Ga perlu support IE atau browser lawas.
 
 ## Wajib dibaca dulu
 
-Sebelum nulis atau ubah CSS/markup apapun, **baca `DESIGN.md`**. Kalau ragu apakah sesuatu playful atau udah kebablasan alay, cek tabel perbandingan di §1 DESIGN.md sebelum nulis kode.
+Sebelum nulis atau ubah CSS/markup apapun, **baca `DESIGN.md`**. Kalau ragu apakah sesuatu masih terasa buatan tangan atau udah kebablasan jadi berantakan, cek tabel perbandingan di §1 DESIGN.md sebelum nulis kode.
 
 ## Struktur file & cara jalanin
 
@@ -42,16 +44,17 @@ Aturan pemisahan file:
 - Struktur CSS: **class-based konsisten**. Jangan campur selector element-based dan class-based buat hal yang sama — bikin override bentrok.
 - Semua nilai warna/spacing/radius/durasi ambil dari CSS custom property di `:root` (didefinisikan di DESIGN.md). Jangan hardcode hex atau px di tengah stylesheet.
 - Penamaan class: kebab-case, bahasa Inggris (`.hero-card`, `.cta-button`). Copy yang tampil ke user: Bahasa Indonesia.
-- Semua efek (confetti, partikel, animasi) dibikin manual pakai canvas/CSS. Ada budget performa di §5 DESIGN.md — patuhi.
+- Semua efek (sobekan kertas, partikel, animasi) dibikin manual pakai canvas/CSS. Ada budget performa di §5 DESIGN.md — patuhi.
 - Audio disintesis pakai Web Audio API, bukan file MP3/WAV, bukan library. Aturan lengkap di §8 DESIGN.md. Ga ada autoplay — audio cuma boleh mulai dari gesture user.
 
 ## Yang TIDAK boleh dilakukan tanpa izin eksplisit
 
 - Ganti atau nambah warna di luar palet di §2 DESIGN.md
-- Nambah dependency/library eksternal (confetti library, animation library, GSAP, dst)
+- Nambah dependency/library eksternal (library efek partikel, animation library, GSAP, dst)
 - Ubah struktur jadi pakai build tool (Vite, webpack, dst)
 - Bikin dark mode (project ini sengaja satu look — lihat §2 DESIGN.md)
-- Nambah signature interaction kedua di halaman yang sama
+- Nambah signature interaction kedua — tiup lilin adalah satu-satunya
+- Ganti scroll-snap jadi drag berbasis pointer (alasan penolakannya ada di §6 DESIGN.md)
 
 ## Workflow tiap task
 
