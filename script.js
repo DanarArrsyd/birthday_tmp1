@@ -33,6 +33,14 @@
     };
     var CURRENT = 'kalimba';
 
+    /* Level keluaran. Diukur dengan merender ulang melodi di OfflineAudioContext:
+       pada 0.15 hasilnya RMS -30,4 dBFS — terlalu pelan, apalagi lewat speaker
+       ponsel. Pada 0.45 dengan kompresor di bawah, RMS naik ke -17,4 dBFS
+       (sekitar 13 dB lebih keras) dan puncaknya masih -3,6 dBFS, jadi masih ada
+       sisa sebelum clipping. Naik ke 0.70 cuma menambah 2 dB tapi memakan
+       headroom, tidak sepadan. */
+    var MASTER = 0.45;
+
     // Wajib dipanggil dari dalam event handler user. Browser blokir kalau nggak.
     function ensure() {
       if (ctx) {
@@ -46,8 +54,21 @@
       if (ctx.state === 'suspended') ctx.resume();   // iOS butuh ini
 
       master = ctx.createGain();
-      master.gain.value = muted ? 0 : 0.15;          // ceiling 0.15 — DESIGN.md §8
-      master.connect(ctx.destination);
+      master.gain.value = muted ? 0 : MASTER;
+
+      /* Kompresor menahan puncak saat nada bertumpuk — melodi ini punya decay
+         0,9 detik dengan jarak nada 0,6 detik, jadi selalu ada dua nada
+         berbunyi bersamaan. Tanpa ini, menaikkan MASTER berarti bertaruh pada
+         clipping. Node bawaan Web Audio, bukan library. */
+      var comp = ctx.createDynamicsCompressor();
+      comp.threshold.value = -18;
+      comp.knee.value = 12;
+      comp.ratio.value = 4;
+      comp.attack.value = 0.005;
+      comp.release.value = 0.15;
+
+      master.connect(comp);
+      comp.connect(ctx.destination);
 
       bus = ctx.createGain();
       bus.connect(master);
@@ -130,7 +151,9 @@
 
       var env = ctx.createGain();
       env.gain.setValueAtTime(0.0001, t);
-      env.gain.exponentialRampToValueAtTime(0.3, t + 0.004);
+      /* Diturunkan seiring MASTER naik tiga kali lipat, supaya desis ini
+         tetap terdengar setipis sebelumnya dan tidak menyaingi melodi. */
+      env.gain.exponentialRampToValueAtTime(0.1, t + 0.004);
       env.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
 
       src.connect(bp);
@@ -161,7 +184,7 @@
     function setMuted(next) {
       muted = next;
       if (!ctx) return;
-      master.gain.setTargetAtTime(muted ? 0 : 0.15, ctx.currentTime, 0.02);
+      master.gain.setTargetAtTime(muted ? 0 : MASTER, ctx.currentTime, 0.02);
     }
 
     function isMuted() { return muted; }

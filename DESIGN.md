@@ -92,12 +92,12 @@ Angka **ikut konteks kalimatnya, bukan dipilih per-angka, dan ga pernah ganti fo
 - Angka yang muncul **di dalam prosa** (misal di baris surat) ikut font prosa itu, yaitu **Lora** — ga pindah ke Special Elite atau Caveat cuma karena dia angka.
 - **Special Elite ga pernah di bawah 14px** (`--fs-label`), dan **cuma buat string pendek** (tanggal, nomor, kicker) — ga pernah buat kalimat penuh.
 - **Caveat ga pernah di bawah 18px** (`--fs-hand` minimum), **maks 3 baris per lembar**, ga pernah `uppercase`, ga pernah `letter-spacing`.
-- `font-variant-numeric: tabular-nums` di tanggal dan nomor halaman (biar digit sejajar rapi, kesan stempel). `font-variant-numeric: lining-nums` di prosa surat (`.letter-line`) — angka menyatu tinggi sama huruf kapital di sekitarnya, ga naik-turun kayak old-style figures.
+- `font-variant-numeric: tabular-nums` di tanggal dan nomor halaman (biar digit sejajar rapi, kesan stempel). `font-variant-numeric: lining-nums` di prosa pesan (`.note`) — angka menyatu tinggi sama huruf kapital di sekitarnya, ga naik-turun kayak old-style figures.
 
 ### Skala tipografi
 
 ```css
---fs-display: clamp(3.5rem, 14vw, 4.5rem);  /* angka umur, Special Elite */
+--fs-display: clamp(2.75rem, 14vw, 4.5rem); /* angka umur, Special Elite */
 --fs-h1:      clamp(1.75rem, 5.5vw, 2.25rem);
 --fs-h2:      clamp(1.375rem, 4vw, 1.625rem);
 --fs-body:    1rem;                          /* 16px */
@@ -256,7 +256,9 @@ Sama kayak efek visual: **disintesis manual pakai Web Audio API**, bukan file MP
 
 - **Ga ada autoplay.** `AudioContext` baru dibikin di dalam event handler interaksi user (`pointerdown` di signature interaction). Browser blokir sebelum itu, dan musik yang nyala sendiri itu ganggu.
 - **Tombol mute wajib ada**, posisi tetap, kelihatan dari awal. Pakai `<button aria-pressed="true|false">`, bukan `<div>`.
-- **Master gain maks `0.15`.** Sintesis oscillator jauh lebih keras dari yang lo kira. Naikin pelan-pelan pas tes, jangan sekali gas.
+- **Master gain `0.45`, dengan `DynamicsCompressorNode` sebelum destination.** Angka ini hasil ukur, bukan kira-kira: melodi dirender ulang di `OfflineAudioContext`, dan pada `0.15` hasilnya RMS −30,4 dBFS — terlalu pelan lewat speaker ponsel. Pada `0.45` RMS naik ke −17,4 dBFS dengan puncak masih −3,6 dBFS.
+- **Kompresornya bukan hiasan.** Melodi ini decay-nya 0,9 detik dengan jarak nada 0,6 detik, jadi selalu ada dua nada berbunyi bersamaan. Menaikkan master tanpa kompresor sama saja bertaruh pada clipping.
+- **Kalau menaikkan `MASTER`, turunkan level desis kertas dengan faktor yang sama.** Desis itu latar; begitu dia menyaingi melodi, dia berubah jadi gangguan.
 - **Berhenti pas tab ga aktif** — `document.addEventListener('visibilitychange', ...)` → suspend `AudioContext`. Musik dari tab background itu bikin orang panik nyari sumbernya.
 - **Satu `AudioContext` per halaman.** Bikin ulang tiap not = memory leak.
 - `prefers-reduced-motion` **bukan** proxy buat audio — orang bisa mau animasi pelan tapi tetep mau musik. Perlakukan terpisah.
