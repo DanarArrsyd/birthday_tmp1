@@ -19,7 +19,8 @@
     var muted = false;
 
     // Preset instrumen — DESIGN.md §8.
-    // Ganti CURRENT ke 'kalimba' kalau music box kerasa kemanisan.
+    // Kalimba: timbre kayu, menyatu dengan kraft.
+    // Ganti ke 'musicbox' kalau ingin lebih berdenting.
     var INSTRUMENTS = {
       musicbox: {
         partials: [[1, 1.00], [2, 0.25], [3.01, 0.08]],
@@ -30,7 +31,7 @@
         attack: 0.008, decay: 0.9, cutoff: 2600
       }
     };
-    var CURRENT = 'musicbox';
+    var CURRENT = 'kalimba';
 
     // Wajib dipanggil dari dalam event handler user. Browser blokir kalau nggak.
     function ensure() {
@@ -169,96 +170,94 @@
   }
 
   /* =======================================================
-     CONFETTI — canvas manual, ada budget. DESIGN.md §5
+     PARTICLES — sobekan kertas, canvas manual, ada budget. DESIGN.md §5
      ======================================================= */
 
-  var CONFETTI_COLORS = ['#FF4D8D', '#FFD6E5', '#FFC94D', '#A78BFA', '#FFFFFF'];
+  var PARTICLES = (function () {
+    var COLORS = ['#F4EADA', '#D9C7A3', '#6B4A2F', '#8F4426', '#8A9A78'];
 
-  function burstConfetti() {
-    if (reduceMotion.matches) return;  // skip total, bukan dipercepat
+    function burst() {
+      if (reduceMotion.matches) return;  // skip total, bukan dipercepat
 
-    var canvas = document.createElement('canvas');
-    canvas.className = 'confetti';
-    canvas.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(canvas);
+      var canvas = document.createElement('canvas');
+      canvas.className = 'confetti';
+      canvas.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(canvas);
 
-    var ctx2d = canvas.getContext('2d');
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);  // cap 2
-    var w = window.innerWidth;
-    var h = window.innerHeight;
+      var ctx2d = canvas.getContext('2d');
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);  // cap 2
+      var w = window.innerWidth;
+      var h = window.innerHeight;
 
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = w + 'px';
-    canvas.style.height = h + 'px';
-    ctx2d.scale(dpr, dpr);
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx2d.scale(dpr, dpr);
 
-    var count = w < 768 ? 80 : 150;   // budget DESIGN.md §5
-    var LIFE = 3000;                  // maks 3 detik
-    var parts = [];
+      var count = w < 768 ? 80 : 150;   // budget DESIGN.md §5
+      var LIFE = 3000;                  // maks 3 detik
+      var parts = [];
 
-    for (var i = 0; i < count; i++) {
-      var angle = Math.random() * Math.PI * 2;
-      var speed = 300 + Math.random() * 600;
-      parts.push({
-        x: w / 2, y: h / 2,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - 200,
-        size: 5 + Math.random() * 7,
-        rot: Math.random() * Math.PI,
-        vr: (Math.random() - 0.5) * 8,
-        color: CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0],
-        round: Math.random() < 0.35
-      });
-    }
+      for (var i = 0; i < count; i++) {
+        var angle = Math.random() * Math.PI * 2;
+        var speed = 300 + Math.random() * 600;
+        parts.push({
+          x: w / 2, y: h / 2,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 200,
+          w: 6 + Math.random() * 9,
+          h: 3 + Math.random() * 5,
+          rot: Math.random() * Math.PI,
+          vr: (Math.random() - 0.5) * 4,   // lebih lambat dari confetti: kertas berat
+          color: COLORS[(Math.random() * COLORS.length) | 0]
+        });
+      }
 
-    var start = null, last = null, raf = null;
+      var start = null, last = null, raf = null;
 
-    function frame(ts) {
-      if (start === null) { start = ts; last = ts; }
-      var dt = Math.min((ts - last) / 1000, 0.05);
-      last = ts;
+      function frame(ts) {
+        if (start === null) { start = ts; last = ts; }
+        var dt = Math.min((ts - last) / 1000, 0.05);
+        last = ts;
 
-      var elapsed = ts - start;
-      if (elapsed >= LIFE) { stop(); return; }
+        var elapsed = ts - start;
+        if (elapsed >= LIFE) { stop(); return; }
 
-      var fade = elapsed > LIFE - 800 ? (LIFE - elapsed) / 800 : 1;
-      ctx2d.clearRect(0, 0, w, h);
+        var fade = elapsed > LIFE - 800 ? (LIFE - elapsed) / 800 : 1;
+        ctx2d.clearRect(0, 0, w, h);
 
-      for (var j = 0; j < parts.length; j++) {
-        var p = parts[j];
-        p.vy += 1400 * dt;
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
-        p.rot += p.vr * dt;
+        for (var j = 0; j < parts.length; j++) {
+          var p = parts[j];
+          p.vy += 1400 * dt;
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.rot += p.vr * dt;
 
-        ctx2d.save();
-        ctx2d.globalAlpha = fade;
-        ctx2d.translate(p.x, p.y);
-        ctx2d.rotate(p.rot);
-        ctx2d.fillStyle = p.color;
-        if (p.round) {
-          ctx2d.beginPath();
-          ctx2d.arc(0, 0, p.size / 2, 0, Math.PI * 2);
-          ctx2d.fill();
-        } else {
-          ctx2d.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+          ctx2d.save();
+          ctx2d.globalAlpha = fade;
+          ctx2d.translate(p.x, p.y);
+          ctx2d.rotate(p.rot);
+          ctx2d.fillStyle = p.color;
+          ctx2d.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx2d.restore();
         }
-        ctx2d.restore();
+
+        raf = window.requestAnimationFrame(frame);
+      }
+
+      function stop() {
+        if (raf) window.cancelAnimationFrame(raf);
+        raf = null;
+        parts.length = 0;
+        canvas.remove();
       }
 
       raf = window.requestAnimationFrame(frame);
     }
 
-    function stop() {
-      if (raf) window.cancelAnimationFrame(raf);
-      raf = null;
-      parts.length = 0;
-      canvas.remove();
-    }
-
-    raf = window.requestAnimationFrame(frame);
-  }
+    return { burst: burst };
+  })();
 
   /* =======================================================
      SLIDE
@@ -597,7 +596,7 @@
       // Perayaan pindah ke sini. Sebelumnya dipicu dari fungsi lama
       // yang sudah dihapus — tanpa dua baris ini lagu dan partikel
       // hilang tanpa suara.
-      burstConfetti();
+      PARTICLES.burst();
       playMelody();
       lockReplay(melodyDuration() * 1000);
     }
