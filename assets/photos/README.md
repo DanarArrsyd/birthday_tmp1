@@ -51,8 +51,17 @@ Bukalah blokir **SETELAH** lo:
 3. Yakin hanya orang yang lo mau yang bisa akses
 
 Setelah itu:
-- Buka `.gitignore` dan hapus blok yang bilang "Foto dilarang masuk repo publik"
+- Buka `.gitignore`, lalu hapus **empat baris komentar DAN tiga baris pola di bawahnya** —
+  dari baris `# Foto dilarang masuk repo publik` sampai baris `!assets/photos/README.md`.
+  Kalau lo cuma hapus baris komentarnya, blokirnya masih aktif dan foto tetap nggak keangkat.
 - Lakukan `git add` ke foto dan `git commit` seperti biasa
 - Sekarang foto bisa di-push ke GitHub privat dengan aman
 
 Jangan buka blokir sebelum itu — orang random di internet bisa lihat foto lo.
+
+### Satu hal lagi
+
+Blokir ini menahan perintah `git add` biasa. Dia **tidak** menahan `git add -f`
+(huruf `f` artinya "paksa"). Jadi kalau lo nemu tutorial di internet yang nyuruh
+nambahin `-f` supaya file "mau ke-add", jangan diikutin — itu persis yang bikin
+foto lolos ke repo publik.
